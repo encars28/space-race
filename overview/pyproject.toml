@@ -1,0 +1,9 @@
+[project]
+name = "overview"
+version = "0.1.0"
+description = "Quick data overview for space launch data"
+requires-python = ">=3.14"
+dependencies = [
+    "pandas>=2.3.3",
+    "seaborn>=0.13.2",
+]
