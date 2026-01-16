@@ -33,7 +33,7 @@ export function drawAcumLaunchesBarChart(
   // Scales
   const xScale = d3
     .scaleBand()
-    .domain(['USA', 'USSR'])
+    .domain(['USA', 'URSS'])
     .range([0, innerWidth])
     .padding(0.4);
 
@@ -42,13 +42,13 @@ export function drawAcumLaunchesBarChart(
   // Color scale
   const colorScale = d3
     .scaleOrdinal<string>()
-    .domain(['USA', 'USSR'])
+    .domain(['USA', 'URSS'])
     .range(['#3b82f6', '#ef4444']);
 
   // Draw bars
   const barData = [
     { country: 'USA', value: currentData.USA },
-    { country: 'USSR', value: currentData.USSR },
+    { country: 'URSS', value: currentData.USSR },
   ];
 
   // Create tooltip
@@ -106,7 +106,7 @@ export function drawAcumLaunchesBarChart(
     .call(d3.axisBottom(xScale))
     .selectAll('text')
     .attr('fill', '#fff')
-    .attr('font-size', '14px')
+    .attr('font-size', '18px')
     .attr('font-weight', 'bold');
 
   g.selectAll('.x-axis path, .x-axis line').attr('stroke', '#666');
