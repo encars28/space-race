@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react'
 import * as d3 from 'd3'
 import SpaceRaceChart from './components/SpaceRaceChart'
 import SuccessFailureChart from './components/SuccessFailureChart'
+import FailureDensityChart from './components/FailureDensityChart'
 import HomePage from './components/HomePage'
 import { StarsBackground } from './components/animate-ui/components/backgrounds/stars'
 import type { MissionData } from './utils/drawDotMatrixChart'
 import './App.css'
 
 // Visualization phases
-type Phase = 'home' | 'success-failure' | 'cumulative'
+type Phase = 'home' | 'success-failure' | 'failure-density' | 'cumulative'
 
 function App() {
   const [phase, setPhase] = useState<Phase>('home')
@@ -37,6 +38,15 @@ function App() {
     setFadeOut(true)
     setTimeout(() => {
       setPhase('success-failure')
+      setFadeOut(false)
+      window.scrollTo({ top: 0 })
+    }, 600)
+  }
+
+  const handleScrollToFailureDensity = () => {
+    setFadeOut(true)
+    setTimeout(() => {
+      setPhase('failure-density')
       setFadeOut(false)
       window.scrollTo({ top: 0 })
     }, 600)
@@ -73,6 +83,15 @@ function App() {
       {phase === 'success-failure' && (
         <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
           <SuccessFailureChart 
+            missions={missions} 
+            onScrollStart={handleScrollToFailureDensity} 
+          />
+        </div>
+      )}
+      
+      {phase === 'failure-density' && (
+        <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
+          <FailureDensityChart 
             missions={missions} 
             onScrollStart={handleScrollToCumulative} 
           />
