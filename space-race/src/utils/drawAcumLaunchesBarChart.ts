@@ -51,6 +51,27 @@ export function drawAcumLaunchesBarChart(
     { country: 'USSR', value: currentData.USSR },
   ];
 
+  // Create tooltip
+  let tooltip = d3.select('body').select<HTMLDivElement>('.chart-tooltip');
+  if (tooltip.empty()) {
+    tooltip = d3
+      .select('body')
+      .append('div')
+      .attr('class', 'chart-tooltip')
+      .style('position', 'absolute')
+      .style('padding', '8px 12px')
+      .style('background', 'rgba(0, 0, 0, 0.85)')
+      .style('color', '#fff')
+      .style('border-radius', '6px')
+      .style('font-size', '14px')
+      .style('font-weight', 'bold')
+      .style('pointer-events', 'none')
+      .style('opacity', '0')
+      .style('transition', 'opacity 0.2s ease')
+      .style('z-index', '1000')
+      .style('border', '1px solid rgba(255, 255, 255, 0.2)');
+  }
+
   g.selectAll('.bar')
     .data(barData)
     .enter()
@@ -61,21 +82,22 @@ export function drawAcumLaunchesBarChart(
     .attr('width', xScale.bandwidth())
     .attr('height', (d) => innerHeight - yScale(d.value))
     .attr('fill', (d) => colorScale(d.country))
-    .attr('rx', 4);
-
-  // Add value labels on bars
-  g.selectAll('.value-label')
-    .data(barData)
-    .enter()
-    .append('text')
-    .attr('class', 'value-label')
-    .attr('x', (d) => (xScale(d.country) || 0) + xScale.bandwidth() / 2)
-    .attr('y', (d) => yScale(d.value) - 10)
-    .attr('text-anchor', 'middle')
-    .attr('fill', '#fff')
-    .attr('font-size', '18px')
-    .attr('font-weight', 'bold')
-    .text((d) => d.value);
+    .attr('rx', 4)
+    .style('cursor', 'pointer')
+    .style('pointer-events', 'all')
+    .on('mouseover', function (_, d) {
+      tooltip
+        .style('opacity', '1')
+        .html(`${d.country}: <span style="color: ${colorScale(d.country)}">${d.value}</span> launches`);
+    })
+    .on('mousemove', function (event) {
+      tooltip
+        .style('left', event.pageX + 15 + 'px')
+        .style('top', event.pageY - 10 + 'px');
+    })
+    .on('mouseout', function () {
+      tooltip.style('opacity', '0');
+    });
 
   // X axis
   g.append('g')
@@ -108,4 +130,19 @@ export function drawAcumLaunchesBarChart(
     .attr('fill', '#fff')
     .attr('font-size', '16px')
     .text('Lanzamientos totales');
+
+  // Add crown on USA bar from 1969 onwards (Moon landing year)
+  if (currentData.year >= 1969) {
+    const crownSize = 80;
+    const usaBarX = xScale('USA') || 0;
+    const usaBarY = yScale(currentData.USA);
+    
+    g.append('image')
+      .attr('class', 'usa-crown')
+      .attr('href', '/crown.png')
+      .attr('x', usaBarX + xScale.bandwidth() / 2 - crownSize / 2)
+      .attr('y', usaBarY - crownSize + 10)
+      .attr('width', crownSize)
+      .attr('height', crownSize);
+  }
 }

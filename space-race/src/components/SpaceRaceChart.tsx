@@ -94,7 +94,7 @@ export default function SpaceRaceChart() {
     return <div className="loading">Loading data...</div>;
   }
 
-  const currentData = data[currentYearIndex];
+  // const currentData = data[currentYearIndex];
 
   // Calculate visible years window (10 years centered on current)
   const halfWindow = Math.floor(VISIBLE_YEARS / 2);
@@ -109,7 +109,7 @@ export default function SpaceRaceChart() {
     startIndex = Math.max(0, endIndex - VISIBLE_YEARS);
   }
   
-  const visibleYears = years.slice(startIndex, endIndex);
+  // const visibleYears = years.slice(startIndex, endIndex);
   const visibleStartIndex = startIndex;
 
   return (
