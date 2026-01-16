@@ -92,7 +92,8 @@ export default function FailureDensityChart({
   }, [missions, animationProgress]);
 
   if (missions.length === 0) {
-    return <div className="loading">Cargando datos...</div>;
+    // return <div className="loading">Cargando datos...</div>;
+    return <div></div>;
   }
 
   return (

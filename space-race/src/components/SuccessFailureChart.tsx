@@ -69,7 +69,8 @@ export default function SuccessFailureChart({
   }, [missions]);
 
   if (missions.length === 0) {
-    return <div className="loading">Loading data...</div>;
+    // return <div className="loading">Loading data...</div>;
+    return <div></div>;
   }
 
   return (

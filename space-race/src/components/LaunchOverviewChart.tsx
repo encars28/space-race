@@ -137,7 +137,8 @@ export default function LaunchOverviewChart({
   }, [data, animationProgress]);
 
   if (!data) {
-    return <div className="loading">Cargando datos...</div>;
+    // return <div className="loading">Cargando datos...</div>;
+    return <div></div>
   }
 
   return (

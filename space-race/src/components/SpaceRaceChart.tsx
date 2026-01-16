@@ -112,7 +112,8 @@ export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChar
   }, [data, currentYearIndex]);
 
   if (data.length === 0) {
-    return <div className="loading">Loading data...</div>;
+    // return <div className="loading">Loading data...</div>;
+    return <div></div>;
   }
 
   // const currentData = data[currentYearIndex];

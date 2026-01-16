@@ -5,6 +5,29 @@
   background: transparent;
 }
 
+/* Fade-in animation */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Vertical timeline on left */
 .timeline-container {
   position: fixed;
@@ -13,6 +36,7 @@
   bottom: 0;
   width: 200px;
   z-index: 100;
+  animation: fadeInLeft 0.8s ease-out forwards;
   overflow: hidden;
 }
 
@@ -116,6 +140,8 @@
   justify-content: center;
   pointer-events: none;
   background: transparent;
+  animation: fadeInUp 0.8s ease-out 0.2s forwards;
+  opacity: 0;
 }
 
 .chart-content {
