@@ -62,16 +62,17 @@ export function drawDotMatrixChart(
   // Calculate grid dimensions
   const dotsPerRow = Math.floor(chartWidth / dotSpacing);
 
-  // Draw function for a grid of dots
+  // Draw function for a grid of dots with animation
   function drawDotGrid(
     container: d3.Selection<SVGGElement, unknown, null, undefined>,
     successCount: number,
     failureCount: number,
     successColor: string,
-    offsetX: number
+    offsetX: number,
+    animationDelay: number = 0 // Base delay for staggering between USA and USSR
   ) {
     const totalDots = successCount + failureCount;
-    const dots: { x: number; y: number; isSuccess: boolean }[] = [];
+    const dots: { x: number; y: number; isSuccess: boolean; index: number }[] = [];
 
     for (let i = 0; i < totalDots; i++) {
       const col = i % dotsPerRow;
@@ -80,6 +81,7 @@ export function drawDotMatrixChart(
         x: offsetX + col * dotSpacing + dotRadius,
         y: row * dotSpacing + dotRadius,
         isSuccess: i < successCount, // First dots are successes
+        index: i,
       });
     }
 
@@ -91,12 +93,18 @@ export function drawDotMatrixChart(
       .attr('class', 'dot')
       .attr('cx', (d) => d.x)
       .attr('cy', (d) => d.y)
-      .attr('r', dotRadius)
+      .attr('r', 0) // Start with radius 0
       .attr('fill', (d) => (d.isSuccess ? successColor : failureColor))
-      .attr('opacity', (d) => (d.isSuccess ? 1 : 0.7))
+      .attr('opacity', 0) // Start invisible
       .style('filter', (d) =>
         d.isSuccess ? `drop-shadow(0 0 3px ${successColor})` : 'none'
-      );
+      )
+      .transition()
+      .duration(150)
+      .delay((d) => animationDelay + d.index * 5) // Stagger each dot by 5ms
+      .ease(d3.easeBackOut.overshoot(1.5))
+      .attr('r', dotRadius)
+      .attr('opacity', (d) => (d.isSuccess ? 1 : 0.7));
   }
 
   // USA section
@@ -113,7 +121,7 @@ export function drawDotMatrixChart(
     // .attr('font-weight', 'bold')
     .text('USA');
 
-  drawDotGrid(usaGroup, usaSuccessDots, usaFailureDots, usaColor, 0);
+  drawDotGrid(usaGroup, usaSuccessDots, usaFailureDots, usaColor, 0, 0);
 
   // USSR section
   const ussrGroup = g
@@ -132,7 +140,7 @@ export function drawDotMatrixChart(
     // .attr('font-weight', 'bold')
     .text('URSS');
 
-  drawDotGrid(ussrGroup, ussrSuccessDots, ussrFailureDots, ussrColor, 0);
+  drawDotGrid(ussrGroup, ussrSuccessDots, ussrFailureDots, ussrColor, 0, 100);
 
   // Legend at bottom
   const legendY = innerHeight + 30;

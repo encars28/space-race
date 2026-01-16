@@ -166,6 +166,7 @@ export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChar
       {/* Centered chart and info */}
       <div className="chart-wrapper">
         <div className="chart-content">
+          <h2 className="chart-title">{years[currentYearIndex]}</h2>
           <svg ref={svgRef}></svg>
           {/* <div className="chart-info">
             <div className="stats">

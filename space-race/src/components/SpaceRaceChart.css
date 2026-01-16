@@ -122,13 +122,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
   background: rgba(8, 8, 13, 0.3) !important;
   padding: 2rem 3rem;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(255, 255, 255, 0.154);
   backdrop-filter: blur(2px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  margin: 0;
 }
 
 .chart-content svg {
