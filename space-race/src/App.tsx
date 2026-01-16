@@ -3,13 +3,14 @@ import * as d3 from 'd3'
 import SpaceRaceChart from './components/SpaceRaceChart'
 import SuccessFailureChart from './components/SuccessFailureChart'
 import FailureDensityChart from './components/FailureDensityChart'
+import LaunchOverviewChart from './components/LaunchOverviewChart'
 import HomePage from './components/HomePage'
 import { StarsBackground } from './components/animate-ui/components/backgrounds/stars'
 import type { MissionData } from './utils/drawDotMatrixChart'
 import './App.css'
 
 // Visualization phases
-type Phase = 'home' | 'success-failure' | 'failure-density' | 'cumulative'
+type Phase = 'home' | 'launch-overview' | 'success-failure' | 'failure-density' | 'cumulative'
 
 function App() {
   const [phase, setPhase] = useState<Phase>('home')
@@ -35,6 +36,15 @@ function App() {
   }, [])
 
   const handleStart = () => {
+    setFadeOut(true)
+    setTimeout(() => {
+      setPhase('launch-overview')
+      setFadeOut(false)
+      window.scrollTo({ top: 0 })
+    }, 600)
+  }
+
+  const handleScrollToSuccessFailure = () => {
     setFadeOut(true)
     setTimeout(() => {
       setPhase('success-failure')
@@ -65,6 +75,15 @@ function App() {
     setFadeOut(true)
     setTimeout(() => {
       setPhase('home')
+      setFadeOut(false)
+      window.scrollTo({ top: 0 })
+    }, 600)
+  }
+
+  const handleBackToLaunchOverview = () => {
+    setFadeOut(true)
+    setTimeout(() => {
+      setPhase('launch-overview')
       setFadeOut(false)
       window.scrollTo({ top: 0 })
     }, 600)
@@ -107,12 +126,21 @@ function App() {
         </div>
       )}
       
+      {phase === 'launch-overview' && (
+        <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
+          <LaunchOverviewChart 
+            onScrollNext={handleScrollToSuccessFailure}
+            onScrollBack={handleBackToHome}
+          />
+        </div>
+      )}
+      
       {phase === 'success-failure' && (
         <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
           <SuccessFailureChart 
             missions={missions} 
             onScrollNext={handleScrollToFailureDensity}
-            onScrollBack={handleBackToHome}
+            onScrollBack={handleBackToLaunchOverview}
           />
         </div>
       )}
