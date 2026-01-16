@@ -1,0 +1,279 @@
+.space-race-container {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Horizontal timeline at top */
+.timeline-container {
+  position: fixed;
+  top: 10px;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem 2rem;
+}
+
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 80%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-50%);
+  z-index: -1;
+}
+
+.timeline-year {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.timeline-year.passed {
+  opacity: 0.7;
+}
+
+.timeline-year.active {
+  opacity: 1;
+}
+
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #444;
+  transition: all 0.3s ease;
+}
+
+.timeline-year.passed .timeline-dot {
+  background: linear-gradient(135deg, #3b82f6, #ef4444);
+}
+
+.timeline-year.active .timeline-dot {
+  background: #fff;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+  transform: scale(1.3);
+}
+
+.timeline-label {
+  font-size: 0.7rem;
+  color: #666;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.timeline-year.active .timeline-label {
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.timeline-progress {
+  max-width: 1000px;
+  margin: 0.75rem auto 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.timeline-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #ef4444);
+  transition: width 0.3s ease;
+}
+
+/* Centered chart wrapper */
+.chart-wrapper {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.chart-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(20, 20, 30, 0.95);
+  padding: 2rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+}
+
+.chart-content svg {
+  display: block;
+}
+
+.chart-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stats {
+  display: flex;
+  gap: 4rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stat .flag {
+  font-size: 2.5rem;
+}
+
+.stat .count {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.stat.usa .count {
+  color: #3b82f6;
+}
+
+.stat.ussr .count {
+  color: #ef4444;
+}
+
+.stat .label {
+  font-size: 0.875rem;
+  color: #888;
+}
+
+.scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: #555;
+  font-size: 0.875rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+/* Scroll spacer for reduced scrolling */
+.scroll-spacer {
+  height: 300vh;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 1.5rem;
+  color: #888;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .timeline-label {
+    font-size: 0.6rem;
+  }
+
+  .timeline-year.active .timeline-label {
+    font-size: 0.75rem;
+  }
+
+  .chart-content {
+    padding: 1.5rem 2rem;
+  }
+
+  .chart-content svg {
+    transform: scale(0.85);
+  }
+
+  .stats {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .timeline-container {
+    padding: 0.75rem 1rem;
+  }
+
+  .timeline-label {
+    display: none;
+  }
+
+  .timeline-year.active .timeline-label {
+    display: block;
+    position: absolute;
+    bottom: -1.5rem;
+  }
+
+  .chart-wrapper {
+    top: 80px;
+  }
+
+  .chart-content {
+    padding: 1rem;
+    margin: 0 1rem;
+  }
+
+  .chart-content svg {
+    transform: scale(0.7);
+  }
+
+  .chart-title {
+    font-size: 1.5rem;
+  }
+
+  .stat .flag {
+    font-size: 1.5rem;
+  }
+
+  .stat .count {
+    font-size: 1.5rem;
+  }
+
+  .scroll-spacer {
+    height: 200vh;
+  }
+}
