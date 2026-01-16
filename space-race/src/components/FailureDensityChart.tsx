@@ -9,16 +9,19 @@ import './FailureDensityChart.css';
 
 interface FailureDensityChartProps {
   missions: MissionData[];
-  onScrollStart: () => void;
+  onScrollNext: () => void;
+  onScrollBack: () => void;
 }
 
 export default function FailureDensityChart({
   missions,
-  onScrollStart,
+  onScrollNext,
+  onScrollBack,
 }: FailureDensityChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const hasScrolledRef = useRef(false);
+  const hasTransitionedRef = useRef(false);
+  const scrollUpCountRef = useRef(0);
   const [animationProgress, setAnimationProgress] = useState(0);
 
   // Animate the chart on mount
@@ -42,21 +45,43 @@ export default function FailureDensityChart({
     requestAnimationFrame(animate);
   }, []);
 
-  // Handle scroll to trigger transition to next chart
+  // Handle scroll down to go to next chart
   useEffect(() => {
     const handleScroll = () => {
-      if (hasScrolledRef.current) return;
+      if (hasTransitionedRef.current) return;
 
       const scrollTop = window.scrollY;
       if (scrollTop > 50) {
-        hasScrolledRef.current = true;
-        onScrollStart();
+        hasTransitionedRef.current = true;
+        onScrollNext();
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [onScrollStart]);
+  }, [onScrollNext]);
+
+  // Handle wheel event to detect scroll-up at top (for going back)
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (hasTransitionedRef.current) return;
+      
+      // Check if we're at the top and trying to scroll up
+      if (window.scrollY <= 0 && e.deltaY < 0) {
+        scrollUpCountRef.current++;
+        // Require multiple scroll-up attempts to prevent accidental triggers
+        if (scrollUpCountRef.current >= 3) {
+          hasTransitionedRef.current = true;
+          onScrollBack();
+        }
+      } else {
+        scrollUpCountRef.current = 0;
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: true });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [onScrollBack]);
 
   // Draw the chart
   useEffect(() => {

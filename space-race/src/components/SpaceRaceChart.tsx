@@ -13,13 +13,16 @@ const VISIBLE_YEARS = 6;
 
 interface SpaceRaceChartProps {
   missions: MissionData[];
+  onScrollBack: () => void;
 }
 
-export default function SpaceRaceChart({ missions }: SpaceRaceChartProps) {
+export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [data, setData] = useState<YearlyData[]>([]);
   const [currentYearIndex, setCurrentYearIndex] = useState(0);
   const [years, setYears] = useState<number[]>([]);
+  const hasTransitionedRef = useRef(false);
+  const scrollUpCountRef = useRef(0);
 
   // Process missions data into cumulative yearly data
   useEffect(() => {
@@ -75,6 +78,28 @@ export default function SpaceRaceChart({ missions }: SpaceRaceChartProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [years]);
+
+  // Handle wheel event to detect scroll-up at top (for going back)
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (hasTransitionedRef.current) return;
+      
+      // Check if we're at the top and trying to scroll up (at first year)
+      if (window.scrollY <= 0 && e.deltaY < 0 && currentYearIndex === 0) {
+        scrollUpCountRef.current++;
+        // Require multiple scroll-up attempts to prevent accidental triggers
+        if (scrollUpCountRef.current >= 3) {
+          hasTransitionedRef.current = true;
+          onScrollBack();
+        }
+      } else {
+        scrollUpCountRef.current = 0;
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: true });
+    return () => window.removeEventListener('wheel', handleWheel);
+  }, [onScrollBack, currentYearIndex]);
 
   // Draw the chart using external function
   useEffect(() => {

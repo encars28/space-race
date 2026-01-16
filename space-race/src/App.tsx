@@ -61,6 +61,33 @@ function App() {
     }, 600)
   }
 
+  const handleBackToHome = () => {
+    setFadeOut(true)
+    setTimeout(() => {
+      setPhase('home')
+      setFadeOut(false)
+      window.scrollTo({ top: 0 })
+    }, 600)
+  }
+
+  const handleBackToSuccessFailure = () => {
+    setFadeOut(true)
+    setTimeout(() => {
+      setPhase('success-failure')
+      setFadeOut(false)
+      window.scrollTo({ top: 0 })
+    }, 600)
+  }
+
+  const handleBackToFailureDensity = () => {
+    setFadeOut(true)
+    setTimeout(() => {
+      setPhase('failure-density')
+      setFadeOut(false)
+      window.scrollTo({ top: 0 })
+    }, 600)
+  }
+
   if (isLoading) {
     return (
       <div className="app">
@@ -84,7 +111,8 @@ function App() {
         <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
           <SuccessFailureChart 
             missions={missions} 
-            onScrollStart={handleScrollToFailureDensity} 
+            onScrollNext={handleScrollToFailureDensity}
+            onScrollBack={handleBackToHome}
           />
         </div>
       )}
@@ -93,13 +121,19 @@ function App() {
         <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
           <FailureDensityChart 
             missions={missions} 
-            onScrollStart={handleScrollToCumulative} 
+            onScrollNext={handleScrollToCumulative}
+            onScrollBack={handleBackToSuccessFailure}
           />
         </div>
       )}
       
       {phase === 'cumulative' && (
-        <SpaceRaceChart missions={missions} />
+        <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
+          <SpaceRaceChart 
+            missions={missions}
+            onScrollBack={handleBackToFailureDensity}
+          />
+        </div>
       )}
     </div>
   )
