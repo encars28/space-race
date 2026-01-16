@@ -97,9 +97,17 @@ export default function SpaceRaceChart() {
 
   return (
     <div className="space-race-container">
-      {/* Horizontal timeline at the top */}
+      {/* Vertical timeline on the left */}
       <div className="timeline-container">
         <div className="timeline">
+          <div className="timeline-track">
+            <div
+              className="timeline-progress-bar"
+              style={{
+                height: `${((currentYearIndex + 0.5) / (years.length - 1)) * 100}%`,
+              }}
+            />
+          </div>
           {years.map((year, index) => (
             <div
               key={year}
@@ -109,14 +117,6 @@ export default function SpaceRaceChart() {
               <span className="timeline-label">{year}</span>
             </div>
           ))}
-        </div>
-        <div className="timeline-progress">
-          <div
-            className="timeline-progress-bar"
-            style={{
-              width: `${((currentYearIndex + 1) / years.length) * 100}%`,
-            }}
-          />
         </div>
       </div>
 

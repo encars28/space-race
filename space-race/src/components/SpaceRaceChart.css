@@ -4,44 +4,58 @@
   min-height: 100vh;
 }
 
-/* Horizontal timeline at top */
+/* Vertical timeline on left */
 .timeline-container {
   position: fixed;
-  top: 10px;
+  top: 0;
   left: 0;
-  right: 0;
+  bottom: 0;
+  width: 80px;
   z-index: 100;
-  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 0;
 }
 
 .timeline {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  max-width: 80%;
-  margin: 0 auto;
+  height: 100%;
   position: relative;
 }
 
-.timeline::before {
-  content: '';
+.timeline-track {
   position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 2px;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
   background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-50%);
-  z-index: -1;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.timeline-progress-bar {
+  width: 100%;
+  background: linear-gradient(180deg, #3b82f6, #ef4444);
+  transition: height 0.3s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .timeline-year {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 0.5rem;
   opacity: 0.4;
   transition: all 0.3s ease;
+  z-index: 1;
 }
 
 .timeline-year.passed {
@@ -58,6 +72,7 @@
   border-radius: 50%;
   background: #444;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .timeline-year.passed .timeline-dot {
@@ -75,6 +90,9 @@
   color: #666;
   font-weight: 500;
   transition: all 0.3s ease;
+  position: absolute;
+  left: 20px;
+  white-space: nowrap;
 }
 
 .timeline-year.active .timeline-label {
@@ -83,26 +101,11 @@
   font-size: 0.85rem;
 }
 
-.timeline-progress {
-  max-width: 1000px;
-  margin: 0.75rem auto 0;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.timeline-progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #ef4444);
-  transition: width 0.3s ease;
-}
-
 /* Centered chart wrapper */
 .chart-wrapper {
   position: fixed;
-  top: 100px;
-  left: 0;
+  top: 0;
+  left: 80px;
   right: 0;
   bottom: 0;
   display: flex;
