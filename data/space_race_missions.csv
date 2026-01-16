@@ -1,4 +1,4 @@
-Original_ID,Organisation,Location,Country,Superpower,Datetime,Year,Details,Mission_Status
+Original_ID,Organisation,Location,Country,Superpower,Datetime,Year,Name,Mission_Status
 405,RVSN USSR,"Site 43/3, Plesetsk Cosmodrome, Russia",Russia,USSR,"Sat Dec 27, 1975 10:22 UTC",1975.0,Molniya-M /Block ML | Molniya-3 n°56,Success
 406,RVSN USSR,"Site 41/1, Plesetsk Cosmodrome, Russia",Russia,USSR,"Thu Dec 25, 1975 19:00 UTC",1975.0,Vostok-2M | Meteor n°33,Success
 407,RVSN USSR,"Site 81/24, Baikonur Cosmodrome, Kazakhstan",Kazakhstan,USSR,"Mon Dec 22, 1975 13:00 UTC",1975.0,Proton-K/Block-DM | Raduga 1,Success

@@ -85,11 +85,12 @@ def generate_space_race_csv(
     # Drop Price and Rocket_Status columns
     columns_to_drop = ['Price', 'Rocket_Status', 'Datetime_parsed']
     df_space_race = df_space_race.drop(columns=columns_to_drop)
+    df_space_race.rename(columns={'Details': 'Name'}, inplace=True)
     
     # Reorder columns to have Country and Superpower in a logical position
     column_order = [
         'Organisation', 'Location', 'Country', 'Superpower', 
-        'Datetime', 'Year', 'Details', 'Mission_Status'
+        'Datetime', 'Year', 'Name', 'Mission_Status'
     ]
     df_space_race = df_space_race[column_order]
     df_space_race.index.name = 'Original_ID'
