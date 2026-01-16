@@ -1,0 +1,39 @@
+.scroll-hint-arrow {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  color: rgba(255, 255, 255, 0.5);
+  animation: bounce-arrow 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.scroll-hint-arrow svg {
+  width: 32px;
+  height: 32px;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes bounce-arrow {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(10px);
+    opacity: 0.8;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .scroll-hint-arrow {
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .scroll-hint-arrow svg {
+    width: 28px;
+    height: 28px;
+  }
+}

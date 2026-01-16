@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import * as d3 from 'd3';
 import { drawAcumLaunchesBarChart } from '../utils/drawAcumLaunchesBarChart';
 import type { YearlyData } from '../utils/drawAcumLaunchesBarChart';
+import type { MissionData } from '../utils/drawDotMatrixChart';
+import ScrollHintArrow from './ScrollHintArrow';
 import './SpaceRaceChart.css';
 
 // Controls how much scrolling is needed to go through all years
@@ -10,54 +11,49 @@ import './SpaceRaceChart.css';
 const SCROLL_SPEED = 5;
 const VISIBLE_YEARS = 6;
 
-export default function SpaceRaceChart() {
+interface SpaceRaceChartProps {
+  missions: MissionData[];
+}
+
+export default function SpaceRaceChart({ missions }: SpaceRaceChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [data, setData] = useState<YearlyData[]>([]);
   const [currentYearIndex, setCurrentYearIndex] = useState(0);
   const [years, setYears] = useState<number[]>([]);
 
-  // Load and process CSV data
+  // Process missions data into cumulative yearly data
   useEffect(() => {
-    d3.csv('/space_race_missions.csv').then((rawData) => {
-      // Filter for USA and USSR only and parse data
-      const missions = rawData
-        .filter((d) => d.Superpower === 'USA' || d.Superpower === 'USSR')
-        .map((d) => ({
-          Year: Math.floor(parseFloat(d.Year || '0')),
-          Superpower: d.Superpower as string,
-        }))
-        .filter((d) => !isNaN(d.Year) && d.Year >= 1957);
+    if (missions.length === 0) return;
 
-      // Get unique years sorted
-      const uniqueYears = [...new Set(missions.map((d) => d.Year))].sort(
-        (a, b) => a - b
-      );
-      setYears(uniqueYears);
+    // Get unique years sorted
+    const uniqueYears = [...new Set(missions.map((d) => d.Year))].sort(
+      (a, b) => a - b
+    );
+    setYears(uniqueYears);
 
-      // Calculate cumulative launches per year
-      const yearlyData: YearlyData[] = [];
-      let cumulativeUSA = 0;
-      let cumulativeUSSR = 0;
+    // Calculate cumulative launches per year
+    const yearlyData: YearlyData[] = [];
+    let cumulativeUSA = 0;
+    let cumulativeUSSR = 0;
 
-      uniqueYears.forEach((year) => {
-        const yearMissions = missions.filter((m) => m.Year === year);
-        cumulativeUSA += yearMissions.filter(
-          (m) => m.Superpower === 'USA'
-        ).length;
-        cumulativeUSSR += yearMissions.filter(
-          (m) => m.Superpower === 'USSR'
-        ).length;
+    uniqueYears.forEach((year) => {
+      const yearMissions = missions.filter((m) => m.Year === year);
+      cumulativeUSA += yearMissions.filter(
+        (m) => m.Superpower === 'USA'
+      ).length;
+      cumulativeUSSR += yearMissions.filter(
+        (m) => m.Superpower === 'USSR'
+      ).length;
 
-        yearlyData.push({
-          year,
-          USA: cumulativeUSA,
-          USSR: cumulativeUSSR,
-        });
+      yearlyData.push({
+        year,
+        USA: cumulativeUSA,
+        USSR: cumulativeUSSR,
       });
-
-      setData(yearlyData);
     });
-  }, []);
+
+    setData(yearlyData);
+  }, [missions]);
 
   // Handle scroll for scrollytelling (reduced scroll distance)
   useEffect(() => {
@@ -171,6 +167,8 @@ export default function SpaceRaceChart() {
         className="scroll-spacer"
         style={{ height: `${SCROLL_SPEED * 100}vh` }}
       />
+      
+      <ScrollHintArrow />
     </div>
   );
 }
