@@ -12,8 +12,8 @@ export function drawAcumLaunchesBarChart(
   allData: YearlyData[]
 ): void {
   const svg = d3.select(svgElement);
-  const width = 500;
-  const height = 400;
+  const width = 600;
+  const height = 500;
   const margin = { top: 60, right: 40, bottom: 60, left: 80 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
@@ -95,7 +95,7 @@ export function drawAcumLaunchesBarChart(
     .call(d3.axisLeft(yScale).ticks(10))
     .selectAll('text')
     .attr('fill', '#fff')
-    .attr('font-size', '12px');
+    .attr('font-size', '14px');
 
   g.selectAll('.y-axis path, .y-axis line').attr('stroke', '#666');
 
@@ -106,6 +106,6 @@ export function drawAcumLaunchesBarChart(
     .attr('x', -innerHeight / 2)
     .attr('text-anchor', 'middle')
     .attr('fill', '#fff')
-    .attr('font-size', '14px')
-    .text('Cumulative Launches');
+    .attr('font-size', '16px')
+    .text('Lanzamientos totales');
 }

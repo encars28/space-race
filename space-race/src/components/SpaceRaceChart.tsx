@@ -8,6 +8,7 @@ import './SpaceRaceChart.css';
 // Lower values = faster scrolling, higher values = slower scrolling
 // 1 = minimal scroll, 5 = moderate scroll, 10 = lots of scrolling
 const SCROLL_SPEED = 5;
+const VISIBLE_YEARS = 6;
 
 export default function SpaceRaceChart() {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -95,11 +96,32 @@ export default function SpaceRaceChart() {
 
   const currentData = data[currentYearIndex];
 
+  // Calculate visible years window (10 years centered on current)
+  const halfWindow = Math.floor(VISIBLE_YEARS / 2);
+  
+  // Calculate start index, keeping current year as centered as possible
+  let startIndex = Math.max(0, currentYearIndex - halfWindow);
+  let endIndex = startIndex + VISIBLE_YEARS;
+  
+  // Adjust if we're near the end
+  if (endIndex > years.length) {
+    endIndex = years.length;
+    startIndex = Math.max(0, endIndex - VISIBLE_YEARS);
+  }
+  
+  const visibleYears = years.slice(startIndex, endIndex);
+  const visibleStartIndex = startIndex;
+
   return (
     <div className="space-race-container">
       {/* Vertical timeline on the left */}
       <div className="timeline-container">
-        <div className="timeline">
+        <div className="timeline"
+          style={{
+            height: `${(years.length / VISIBLE_YEARS) * 100}%`,
+            transform: `translateY(${-visibleStartIndex * (100 / years.length)}%)`,
+          }}
+        >
           <div className="timeline-track">
             <div
               className="timeline-progress-bar"
