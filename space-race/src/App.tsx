@@ -5,21 +5,29 @@ import { StarsBackground } from './components/animate-ui/components/backgrounds/
 import './App.css'
 
 function App() {
-  const [showChart, setShowChart] = useState(false)
+  const [started, setStarted] = useState(false)
+  const [fadeOut, setFadeOut] = useState(false)
 
   const handleStart = () => {
-    setShowChart(true)
-    // Scroll to top when starting the visualization
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setFadeOut(true)
+    setTimeout(() => {
+      setStarted(true)
+      window.scrollTo({ top: 0 })
+    }, 600)
   }
 
   return (
     <div className="app">
       <StarsBackground className="!fixed inset-0 -z-10 !h-screen !w-screen" />
-      {showChart ? (
+      
+      {!started && (
+        <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
+          <HomePage onStart={handleStart} />
+        </div>
+      )}
+      
+      {started && (
         <SpaceRaceChart />
-      ) : (
-        <HomePage onStart={handleStart} />
       )}
     </div>
   )
