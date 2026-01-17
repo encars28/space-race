@@ -16,7 +16,6 @@ export default function CumulativeLineChart({
   const svgRef = useRef<SVGSVGElement>(null);
   const hasTransitionedRef = useRef(false);
   const scrollUpCountRef = useRef(0);
-  const [animationProgress, setAnimationProgress] = useState(0);
 
   // Process data
   const chartData = useMemo(() => {
@@ -43,31 +42,11 @@ export default function CumulativeLineChart({
     return data;
   }, [missions]);
 
-  // Animate on mount
-  useEffect(() => {
-    const duration = 2000; // 2 seconds
-    const startTime = Date.now();
-
-    const animate = () => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      const eased = 1 - Math.pow(1 - progress, 3); // Cubic ease out
-      setAnimationProgress(eased);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      }
-    };
-
-    requestAnimationFrame(animate);
-  }, []);
-
   // Handle drawing
   useEffect(() => {
     if (!svgRef.current || chartData.length === 0) return;
-    drawCumulativeLineChart(svgRef.current, chartData, animationProgress);
-  }, [chartData, animationProgress]);
+    drawCumulativeLineChart(svgRef.current, chartData);
+  }, [chartData]);
 
   // Handle scroll back
   useEffect(() => {
@@ -104,16 +83,13 @@ export default function CumulativeLineChart({
           <p>
             Aunque la <strong>URSS</strong> tomó la delantera inicial con el Sputnik y el primer humano en el espacio (Yuri Gagarin), <strong>EE. UU.</strong> logró el hito definitivo al llevar humanos a la Luna en 1969.
           </p>
-          <p>
-            Sin embargo, como muestran los datos, la URSS mantuvo un ritmo de lanzamientos superior y constante durante casi toda la era, demostrando una capacidad industrial inmensa.
-          </p>
           <p className="highlight">
             Más allá de la política, esta competencia aceleró avances científicos que hoy damos por sentados, desde las telecomunicaciones hasta la observación terrestre.
           </p>
           
           <div className='footer-buttons'>
             <button className="restart-button" onClick={onScrollBack}>
-              Volver atrás
+              Volver al inicio
             </button>
           </div>
         </div>

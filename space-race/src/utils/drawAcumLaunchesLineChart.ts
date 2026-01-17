@@ -8,8 +8,7 @@ export interface DataPoint {
 
 export function drawCumulativeLineChart(
   svgElement: SVGSVGElement,
-  data: DataPoint[],
-  animationProgress: number = 1
+  data: DataPoint[]
 ): void {
   const svg = d3.select(svgElement);
   
@@ -115,18 +114,18 @@ export function drawCumulativeLineChart(
 
   // Draw lines
   // Create clipping path for animation
-//   const clipWidth = innerWidth * animationProgress;
+  const clipId = 'chart-clip-' + Math.random().toString(36).substr(2, 9);
   
-//   const clipPath = g.append('clipPath')
-//     .attr('id', 'chart-clip')
-//     .append('rect')
-//     .attr('width', clipWidth)
-//     .attr('height', height) // Cover full height including margins effectively, but starting at 0,0 relative to g
-//     .attr('x', 0)
-//     .attr('y', -margin.top);
+  const clipRect = g.append('clipPath')
+    .attr('id', clipId)
+    .append('rect')
+    .attr('width', 0) // Start at 0
+    .attr('height', height) // Cover full height
+    .attr('x', 0)
+    .attr('y', -margin.top);
 
   const linesGroup = g.append('g')
-    .attr('clip-path', 'url(#chart-clip)');
+    .attr('clip-path', `url(#${clipId})`);
 
   // USA Line
   linesGroup.append('path')
@@ -146,24 +145,34 @@ export function drawCumulativeLineChart(
     .attr('stroke-width', 4)
     .attr('stroke-linecap', 'round');
 
-  // Add final dots if animation is complete or near complete
-  if (animationProgress > 0.99) {
-    const lastPoint = data[data.length - 1];
-    
-    // USA Dot
-    g.append('circle')
-      .attr('cx', xScale(lastPoint.year))
-      .attr('cy', yScale(lastPoint.USA))
-      .attr('r', 6)
-      .attr('fill', '#3b82f6');
+  // Add final dots group (initially hidden)
+  const dotsGroup = g.append('g').style('opacity', 0);
+  
+  const lastPoint = data[data.length - 1];
+  
+  // USA Dot
+  dotsGroup.append('circle')
+    .attr('cx', xScale(lastPoint.year))
+    .attr('cy', yScale(lastPoint.USA))
+    .attr('r', 6)
+    .attr('fill', '#3b82f6');
 
-    // USSR Dot
-    g.append('circle')
-      .attr('cx', xScale(lastPoint.year))
-      .attr('cy', yScale(lastPoint.USSR))
-      .attr('r', 6)
-      .attr('fill', '#ef4444');
-  }
+  // USSR Dot
+  dotsGroup.append('circle')
+    .attr('cx', xScale(lastPoint.year))
+    .attr('cy', yScale(lastPoint.USSR))
+    .attr('r', 6)
+    .attr('fill', '#ef4444');
+
+  // Animate
+  clipRect.transition()
+    .duration(2000)
+    .ease(d3.easeCubicOut)
+    .attr('width', innerWidth)
+    .on('end', () => {
+        dotsGroup.transition().duration(500).style('opacity', 1);
+        setupTooltip();
+    });
 
   // Titles
   svg.append('text')
@@ -176,41 +185,40 @@ export function drawCumulativeLineChart(
     .text('Lanzamientos durante la carrera espacial');
 
   // Legend
-//   const legend = svg.append('g')
-//     .attr('transform', `translate(${width - margin.right - 50}, ${margin.top + 20})`);
+  // const legend = svg.append('g')
+  //   .attr('transform', `translate(${width - margin.right - 50}, ${margin.top + 20})`);
 
-//   // USA Legend
-//   legend.append('rect')
-//     .attr('x', 0)
-//     .attr('y', 0)
-//     .attr('width', 15)
-//     .attr('height', 15)
-//     .attr('fill', '#3b82f6');
+  // // USA Legend
+  // legend.append('rect')
+  //   .attr('x', 0)
+  //   .attr('y', 0)
+  //   .attr('width', 15)
+  //   .attr('height', 15)
+  //   .attr('fill', '#3b82f6');
   
-//   legend.append('text')
-//     .attr('x', 20)
-//     .attr('y', 12)
-//     .text('USA')
-//     .attr('fill', 'white')
-//     .attr('font-size', '14px');
+  // legend.append('text')
+  //   .attr('x', 20)
+  //   .attr('y', 12)
+  //   .text('USA')
+  //   .attr('fill', 'white')
+  //   .attr('font-size', '14px');
 
-//   // USSR Legend
-//   legend.append('rect')
-//     .attr('x', 0)
-//     .attr('y', 25)
-//     .attr('width', 15)
-//     .attr('height', 15)
-//     .attr('fill', '#ef4444');
+  // // USSR Legend
+  // legend.append('rect')
+  //   .attr('x', 0)
+  //   .attr('y', 25)
+  //   .attr('width', 15)
+  //   .attr('height', 15)
+  //   .attr('fill', '#ef4444');
   
-//   legend.append('text')
-//     .attr('x', 20)
-//     .attr('y', 37)
-//     .text('URSS')
-//     .attr('fill', 'white')
-//     .attr('font-size', '14px');
+  // legend.append('text')
+  //   .attr('x', 20)
+  //   .attr('y', 37)
+  //   .text('URSS')
+  //   .attr('fill', 'white')
+  //   .attr('font-size', '14px');
 
-  // Tooltip interaction (only when animation is finished)
-  if (animationProgress > 0.99) {
+  function setupTooltip() {
     // Use a body-attached tooltip like the failure density chart for consistent appearance
     const tooltip = d3
       .select('body')

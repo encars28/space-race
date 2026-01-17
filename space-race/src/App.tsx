@@ -179,7 +179,7 @@ function App() {
         <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
           <CumulativeLineChart 
             missions={missions}
-            onScrollBack={handleScrollToCumulative}
+            onScrollBack={handleBackToHome}
           />
         </div>
       )}
