@@ -50,8 +50,8 @@
   --sidebar-ring: oklch(0.708 0 0);
 
   /* hide scrollbar for IE, Edge and Firefox */
-  /* -ms-overflow-style: none;
-  scrollbar-width: none; */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* hide scrollbar for chrome, safari and opera */

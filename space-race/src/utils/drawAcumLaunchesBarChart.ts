@@ -141,7 +141,7 @@ export function drawAcumLaunchesBarChart(
       .attr('class', 'usa-crown')
       .attr('href', '/crown.png')
       .attr('x', usaBarX + xScale.bandwidth() / 2 - crownSize / 2)
-      .attr('y', usaBarY - crownSize + 10)
+      .attr('y', usaBarY - crownSize + 15)
       .attr('width', crownSize)
       .attr('height', crownSize);
   }

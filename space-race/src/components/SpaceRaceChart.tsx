@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import { drawAcumLaunchesBarChart } from '../utils/drawAcumLaunchesBarChart';
 import type { YearlyData } from '../utils/drawAcumLaunchesBarChart';
 import type { MissionData } from '../utils/drawDotMatrixChart';
+import { getEventsForYear, getCountryFlag } from '../utils/timelineData';
+import type { TimelineEvent } from '../utils/timelineData';
 import ScrollHintArrow from './ScrollHintArrow';
 import './SpaceRaceChart.css';
 
 // Controls how much scrolling is needed to go through all years
 // Lower values = faster scrolling, higher values = slower scrolling
 // 1 = minimal scroll, 5 = moderate scroll, 10 = lots of scrolling
-const SCROLL_SPEED = 5;
+const SCROLL_SPEED = 8;
 const VISIBLE_YEARS = 6;
 
 interface SpaceRaceChartProps {
@@ -21,6 +23,7 @@ export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChar
   const [data, setData] = useState<YearlyData[]>([]);
   const [currentYearIndex, setCurrentYearIndex] = useState(0);
   const [years, setYears] = useState<number[]>([]);
+  const [currentEvents, setCurrentEvents] = useState<TimelineEvent[]>([]);
   const hasTransitionedRef = useRef(false);
   const scrollUpCountRef = useRef(0);
 
@@ -111,6 +114,14 @@ export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChar
     drawAcumLaunchesBarChart(svgRef.current, currentData, data);
   }, [data, currentYearIndex]);
 
+  // Update current events when year changes
+  useEffect(() => {
+    if (years.length === 0) return;
+    const currentYear = years[currentYearIndex];
+    const events = getEventsForYear(currentYear);
+    setCurrentEvents(events);
+  }, [years, currentYearIndex]);
+
   if (data.length === 0) {
     // return <div className="loading">Loading data...</div>;
     return <div></div>;
@@ -165,28 +176,35 @@ export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChar
       </div>
 
       {/* Centered chart and info */}
-      <div className="chart-wrapper">
+      <div className="wrapper">
+        <div className="chart-wrapper">
         <div className="chart-content">
           <h2 className="chart-title">{years[currentYearIndex]}</h2>
           <svg ref={svgRef}></svg>
-          {/* <div className="chart-info">
-            <div className="stats">
-              <div className="stat usa">
-                <span className="flag">🇺🇸</span>
-                <span className="count">{currentData?.USA || 0}</span>
-                <span className="label">USA launches</span>
-              </div>
-              <div className="stat ussr">
-                <span className="flag">☭</span>
-                <span className="count">{currentData?.USSR || 0}</span>
-                <span className="label">USSR launches</span>
-              </div>
-            </div>
-          </div> */}
-          {/* <div className="scroll-hint">
-            <span>↓ Scroll to advance through time ↓</span>
-          </div> */}
         </div>
+      </div>
+
+      {/* Events panel between timeline and chart */}
+      <div className="events-container">
+        {currentEvents.length > 0 && (
+          <div className="events-panel" key={years[currentYearIndex]}>
+            {currentEvents.map((event, index) => (
+              <div key={index} className={`event-card ${event.country === 'USA' ? 'event-usa' : event.country === 'URSS' ? 'event-ussr' : 'event-both'}`}>
+                {/* Crown for the Moon Landing event */}
+                {event.title === 'Aterrizaje en la Luna' && (
+                  <img src="/crown.png" alt="Crown" className="event-crown" />
+                )}
+
+                <div className="event-header">
+                  <span className="event-date">{event.date}</span>
+                </div>
+                <h3 className={`event-title ${event.country === 'USA' ? 'event-usa' : event.country === 'URSS' ? 'event-ussr' : 'event-both'}`}>{event.title}</h3>
+                <p className="event-description">{event.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       </div>
 
       {/* Scroll spacer - height controlled by SCROLL_SPEED */}
