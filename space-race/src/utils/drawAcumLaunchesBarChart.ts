@@ -45,10 +45,28 @@ export function drawAcumLaunchesBarChart(
     .domain(['USA', 'URSS'])
     .range(['#3b82f6', '#ef4444']);
 
-  // Draw bars
+  const alternateColorScale = d3
+    .scaleOrdinal<string>()
+    .domain(['USA', 'URSS'])
+    .range(['#60a5fa', '#f87171']);
+
+  // Calculate previous and new launches
+  const currentIndex = allData.findIndex(d => d.year === currentData.year);
+  const prevData = currentIndex > 0 ? allData[currentIndex - 1] : { year: 0, USA: 0, USSR: 0 };
+
   const barData = [
-    { country: 'USA', value: currentData.USA },
-    { country: 'URSS', value: currentData.USSR },
+    { 
+      country: 'USA', 
+      prev: prevData.USA, 
+      new: currentData.USA - prevData.USA, 
+      total: currentData.USA 
+    },
+    { 
+      country: 'URSS', 
+      prev: prevData.USSR, 
+      new: currentData.USSR - prevData.USSR, 
+      total: currentData.USSR 
+    },
   ];
 
   // Create tooltip
@@ -72,23 +90,65 @@ export function drawAcumLaunchesBarChart(
       .style('border', '1px solid rgba(255, 255, 255, 0.2)');
   }
 
-  g.selectAll('.bar')
+  const groups = g.selectAll('.country-group')
     .data(barData)
     .enter()
-    .append('rect')
-    .attr('class', 'bar')
-    .attr('x', (d) => xScale(d.country) || 0)
-    .attr('y', (d) => yScale(d.value))
+    .append('g')
+    .attr('class', 'country-group')
+    .attr('transform', d => `translate(${xScale(d.country) || 0}, 0)`);
+
+  // Draw Previous Total (Bottom part)
+  groups.append('rect')
+    .attr('class', 'bar-prev')
+    .attr('y', d => yScale(d.prev))
     .attr('width', xScale.bandwidth())
-    .attr('height', (d) => innerHeight - yScale(d.value))
-    .attr('fill', (d) => colorScale(d.country))
-    .attr('rx', 4)
+    .attr('height', d => innerHeight - yScale(d.prev))
+    .attr('fill', d => colorScale(d.country))
+    .style('opacity', 1); // Solid for history
+
+  // Draw New Launches (Top part)
+  groups.append('path')
+    .attr('class', 'bar-new')
+    .attr('d', d => {
+      const x = 0;
+      const y = yScale(d.total);
+      const w = xScale.bandwidth();
+      const h = Math.max(0, yScale(d.prev) - yScale(d.total));
+      const r = 4;
+      const effR = Math.min(r, h, w / 2);
+
+      if (h <= 0) return '';
+
+      // Path with rounded top corners and square bottom corners
+      return `
+        M ${x} ${y + h}
+        L ${x} ${y + effR}
+        Q ${x} ${y} ${x + effR} ${y}
+        L ${x + w - effR} ${y}
+        Q ${x + w} ${y} ${x + w} ${y + effR}
+        L ${x + w} ${y + h}
+        Z
+      `;
+    })
+    .attr('fill', d => alternateColorScale(d.country))
+    .style('opacity', 1); // Faded for new launches
+
+  // Add invisible rect for tooltip interaction covering the whole bar space
+  groups.append('rect')
+    .attr('class', 'interaction-layer')
+    .attr('y', d => yScale(d.total)) // Top of the stack
+    .attr('width', xScale.bandwidth())
+    .attr('height', d => innerHeight - yScale(d.total))
+    .attr('fill', 'transparent')
     .style('cursor', 'pointer')
-    .style('pointer-events', 'all')
     .on('mouseover', function (_, d) {
       tooltip
         .style('opacity', '1')
-        .html(`${d.country}: <span style="color: ${colorScale(d.country)}">${d.value}</span> launches`);
+        .html(`
+          <span style="color: ${colorScale(d.country)}">${d.country}</span><br/>
+          Total: ${d.total}<br/>
+          Este año: ${d.new}
+        `);
     })
     .on('mousemove', function (event) {
       tooltip
