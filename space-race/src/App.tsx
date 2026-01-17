@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import * as d3 from 'd3'
 import SpaceRaceChart from './components/SpaceRaceChart'
+import CumulativeLineChart from './components/CumulativeLineChart'
 import SuccessFailureChart from './components/SuccessFailureChart'
 import FailureDensityChart from './components/FailureDensityChart'
 import LaunchOverviewChart from './components/LaunchOverviewChart'
@@ -10,7 +11,7 @@ import type { MissionData } from './utils/drawDotMatrixChart'
 import './App.css'
 
 // Visualization phases
-type Phase = 'home' | 'launch-overview' | 'success-failure' | 'failure-density' | 'cumulative'
+type Phase = 'home' | 'launch-overview' | 'success-failure' | 'failure-density' | 'cumulative' | 'conclusions'
 
 function App() {
   const [phase, setPhase] = useState<Phase>('home')
@@ -66,6 +67,15 @@ function App() {
     setFadeOut(true)
     setTimeout(() => {
       setPhase('cumulative')
+      setFadeOut(false)
+      window.scrollTo({ top: 0 })
+    }, 600)
+  }
+
+  const handleScrollToConclusions = () => {
+    setFadeOut(true)
+    setTimeout(() => {
+      setPhase('conclusions')
       setFadeOut(false)
       window.scrollTo({ top: 0 })
     }, 600)
@@ -159,7 +169,17 @@ function App() {
         <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
           <SpaceRaceChart 
             missions={missions}
+            onScrollNext={handleScrollToConclusions}
             onScrollBack={handleBackToFailureDensity}
+          />
+        </div>
+      )}
+
+      {phase === 'conclusions' && (
+        <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
+          <CumulativeLineChart 
+            missions={missions}
+            onScrollBack={handleScrollToCumulative}
           />
         </div>
       )}

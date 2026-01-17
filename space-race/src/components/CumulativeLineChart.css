@@ -1,0 +1,107 @@
+.cumulative-chart-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    box-sizing: border-box;
+    position: relative;
+    color: white;
+  }
+  
+  .cumulative-chart-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 2rem;
+    max-width: 1400px;
+    width: 100%;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+  }
+  
+  .cumulative-chart-viz {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .cumulative-chart-viz svg {
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+    overflow: visible;
+  }
+  
+  .cumulative-conclusions {
+    text-align: left;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .cumulative-conclusions h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #fff, #aaa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .cumulative-conclusions p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+    color: #e0e0e0;
+  }
+  
+  .cumulative-conclusions .highlight {
+    font-style: italic;
+    border-left: 3px solid #ffd700;
+    padding-left: 1rem;
+    color: #ffd700;
+  }
+
+  .footer-buttons {
+    margin-top: 1rem;
+  }
+
+  .restart-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .restart-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1024px) {
+    .cumulative-chart-grid {
+      grid-template-columns: 1fr;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+  
+    .cumulative-chart-viz {
+      min-height: 300px;
+    }
+
+    .cumulative-conclusions h2 {
+      font-size: 2rem;
+    }
+  }

@@ -16,9 +16,10 @@ const VISIBLE_YEARS = 6;
 interface SpaceRaceChartProps {
   missions: MissionData[];
   onScrollBack: () => void;
+  onScrollNext?: () => void;
 }
 
-export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChartProps) {
+export default function SpaceRaceChart({ missions, onScrollBack, onScrollNext }: SpaceRaceChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [data, setData] = useState<YearlyData[]>([]);
   const [currentYearIndex, setCurrentYearIndex] = useState(0);
@@ -26,6 +27,7 @@ export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChar
   const [currentEvents, setCurrentEvents] = useState<TimelineEvent[]>([]);
   const hasTransitionedRef = useRef(false);
   const scrollUpCountRef = useRef(0);
+  const scrollDownCountRef = useRef(0);
 
   // Process missions data into cumulative yearly data
   useEffect(() => {
@@ -82,13 +84,16 @@ export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChar
     return () => window.removeEventListener('scroll', handleScroll);
   }, [years]);
 
-  // Handle wheel event to detect scroll-up at top (for going back)
+  // Handle wheel event to detect scroll-up at top (for going back) or scroll-down at bottom (for next)
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (hasTransitionedRef.current) return;
       
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollTop = window.scrollY;
+
       // Check if we're at the top and trying to scroll up (at first year)
-      if (window.scrollY <= 0 && e.deltaY < 0 && currentYearIndex === 0) {
+      if (scrollTop <= 0 && e.deltaY < 0 && currentYearIndex === 0) {
         scrollUpCountRef.current++;
         // Require multiple scroll-up attempts to prevent accidental triggers
         if (scrollUpCountRef.current >= 3) {
@@ -98,11 +103,23 @@ export default function SpaceRaceChart({ missions, onScrollBack }: SpaceRaceChar
       } else {
         scrollUpCountRef.current = 0;
       }
+
+      // Check if we're at the bottom and trying to scroll down (at last year)
+      const atBottom = docHeight - scrollTop < 10;
+      if (atBottom && e.deltaY > 0 && currentYearIndex === years.length - 1 && onScrollNext) {
+        scrollDownCountRef.current++;
+        if (scrollDownCountRef.current >= 3) {
+            hasTransitionedRef.current = true;
+            onScrollNext();
+        }
+      } else {
+        scrollDownCountRef.current = 0;
+      }
     };
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [onScrollBack, currentYearIndex]);
+  }, [onScrollBack, onScrollNext, currentYearIndex, years.length]);
 
   // Draw the chart using external function
   useEffect(() => {
