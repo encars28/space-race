@@ -7,12 +7,14 @@ import './RaceLineChart.css';
 
 interface CumulativeLineChartProps {
   missions: MissionData[];
-  onScrollBack: () => void;
+  onBackToHome: () => void;
+  onBackToCumulative: () => void;
 }
 
 export default function CumulativeLineChart({
   missions,
-  onScrollBack,
+  onBackToHome,
+  onBackToCumulative,
 }: CumulativeLineChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const hasTransitionedRef = useRef(false);
@@ -65,7 +67,7 @@ export default function CumulativeLineChart({
     };
   }, [chartData]);
 
-  // Handle scroll back
+  // Handle scroll back (scrolling up will navigate back to the cumulative chart)
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
       if (hasTransitionedRef.current) return;
@@ -74,7 +76,7 @@ export default function CumulativeLineChart({
         scrollUpCountRef.current++;
         if (scrollUpCountRef.current >= 3) {
           hasTransitionedRef.current = true;
-          onScrollBack();
+          onBackToCumulative();
         }
       } else {
         scrollUpCountRef.current = 0;
@@ -83,7 +85,9 @@ export default function CumulativeLineChart({
 
     window.addEventListener('wheel', handleWheel, { passive: true });
     return () => window.removeEventListener('wheel', handleWheel);
-  }, [onScrollBack]);
+  }, [onBackToCumulative]);
+
+
 
   return (
     <div className="cumulative-chart-container">
@@ -105,7 +109,7 @@ export default function CumulativeLineChart({
           </p>
           
           <div className='footer-buttons'>
-            <button className="restart-button" onClick={onScrollBack}>
+            <button className="restart-button" onClick={onBackToHome}>
               Volver al inicio
             </button>
           </div>

@@ -113,6 +113,15 @@ function App() {
     }, 600)
   }
 
+  const handleBackToCumulative = () => {
+    setFadeOut(true)
+    setTimeout(() => {
+      setPhase('cumulative')
+      setFadeOut(false)
+      window.scrollTo({ top: 0 })
+    }, 600)
+  }
+
   return (
     <div className="app">
       <StarsBackground className="!fixed inset-0 -z-10 !h-screen !w-screen" />
@@ -167,7 +176,8 @@ function App() {
         <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
           <CumulativeLineChart 
             missions={missions}
-            onScrollBack={handleBackToHome}
+            onBackToHome={handleBackToHome}
+            onBackToCumulative={handleBackToCumulative}
           />
         </div>
       )}
