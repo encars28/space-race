@@ -37,6 +37,22 @@ export default function LaunchOverviewChart({
   const [data, setData] = useState<ReturnType<
     typeof processLaunchOverviewData
   > | null>(null);
+  const isLockedRef = useRef(true);
+
+  // Unlock scroll after a delay to prevent accidental skips
+  useEffect(() => {
+    // Lock for 1 second to ensure user sees the chart
+    const timer = setTimeout(() => {
+      isLockedRef.current = false;
+      
+      // Check if we are already past threshold (e.g. user scrolled during lock)
+      if (window.scrollY > window.innerHeight * 0.3 && !hasTransitionedRef.current) {
+        hasTransitionedRef.current = true;
+        onScrollNext();
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [onScrollNext]);
 
   // Process data from props
   useEffect(() => {
@@ -68,10 +84,13 @@ export default function LaunchOverviewChart({
   // Handle scroll down to go to next chart
   useEffect(() => {
     const handleScroll = () => {
-      if (hasTransitionedRef.current) return;
+      if (hasTransitionedRef.current || isLockedRef.current) return;
 
       const scrollTop = window.scrollY;
-      if (scrollTop > 50) {
+      // Require scrolling 30% of the viewport height (approx 300px on desktop)
+      const threshold = window.innerHeight * 0.3;
+
+      if (scrollTop > threshold) {
         hasTransitionedRef.current = true;
         onScrollNext();
       }
@@ -84,7 +103,7 @@ export default function LaunchOverviewChart({
   // Handle wheel event to detect scroll-up at top (for going back)
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (hasTransitionedRef.current) return;
+      if (hasTransitionedRef.current || isLockedRef.current) return;
 
       if (window.scrollY <= 0 && e.deltaY < 0) {
         scrollUpCountRef.current++;

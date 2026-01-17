@@ -22,14 +22,32 @@ export default function SuccessFailureChart({
   const hasTransitionedRef = useRef(false);
   const scrollUpCountRef = useRef(0);
   const hasDrawnRef = useRef(false);
+  const isLockedRef = useRef(true);
+
+  // Unlock scroll after a delay to prevent accidental skips
+  useEffect(() => {
+    // Lock for 1 second to ensure user sees the chart
+    const timer = setTimeout(() => {
+      isLockedRef.current = false;
+      
+      // Check if we are already past threshold (e.g. user scrolled during lock)
+      if (window.scrollY > window.innerHeight * 0.3 && !hasTransitionedRef.current) {
+        hasTransitionedRef.current = true;
+        onScrollNext();
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [onScrollNext]);
 
   // Handle scroll down to go to next chart
   useEffect(() => {
     const handleScroll = () => {
-      if (hasTransitionedRef.current) return;
+      if (hasTransitionedRef.current || isLockedRef.current) return;
 
       const scrollTop = window.scrollY;
-      if (scrollTop > 50) {
+      const threshold = window.innerHeight * 0.3; // Require scrolling 30% of the viewport height
+
+      if (scrollTop > threshold) {
         hasTransitionedRef.current = true;
         onScrollNext();
       }
@@ -42,7 +60,7 @@ export default function SuccessFailureChart({
   // Handle wheel event to detect scroll-up at top (for going back)
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
-      if (hasTransitionedRef.current) return;
+      if (hasTransitionedRef.current || isLockedRef.current) return;
       
       // Check if we're at the top and trying to scroll up
       if (window.scrollY <= 0 && e.deltaY < 0) {
