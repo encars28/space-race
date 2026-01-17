@@ -112,7 +112,7 @@ export function drawPieChart(
     .text('Distribución de lanzamientos');
 
   const pieData = [
-    { label: 'USA', value: data.usa, color: '#3b82f6' },
+    { label: 'EEUU', value: data.usa, color: '#3b82f6' },
     { label: 'USSR', value: data.ussr, color: '#ef4444' },
     { label: 'Otros', value: data.other, color: '#9ca3af' },
   ].filter((d) => d.value > 0);

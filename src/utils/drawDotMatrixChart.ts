@@ -119,7 +119,7 @@ export function drawDotMatrixChart(
   // USA section
   const usaGroup = g.append('g').attr('class', 'usa-section');
 
-  // USA title
+  // USA title (displayed as EEUU)
   usaGroup
     .append('text')
     .attr('x', chartWidth / 2)
@@ -128,7 +128,7 @@ export function drawDotMatrixChart(
     .attr('fill', "#fff")
     .attr('font-size', '22px')
     // .attr('font-weight', 'bold')
-    .text('USA');
+    .text('EEUU');
 
   drawDotGrid(usaGroup, usaDots.successDots, usaDots.failureDots, usaColor, 0, 0);
 
@@ -241,7 +241,7 @@ export function drawDotMatrixChart(
       tooltip
         .style('opacity', '1')
         .html(`
-          <div style="text-align: center; margin-bottom: 6px;"><strong style="color: ${usaColor}">USA</strong></div>
+          <div style="text-align: center; margin-bottom: 6px;"><strong style="color: ${usaColor}">EEUU</strong></div>
           <div><strong>Éxitos:</strong> ${data.usaSuccess}</div>
           <div><strong>Fallos:</strong> ${data.usaFailure}</div>
           <div style="margin-top: 6px; color: #10b981;">Porcentaje de éxito: ${successRate}%</div>

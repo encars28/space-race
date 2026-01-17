@@ -202,7 +202,7 @@ export function drawCumulativeLineChart(
   const legend = svg.append('g')
     .attr('transform', `translate(${width - margin.right - 50}, ${height - margin.bottom -195})`);
 
-  // USA Legend
+  // USA (displayed as EEUU) Legend
   legend.append('rect')
     .attr('x', 0)
     .attr('y', 0)
@@ -213,7 +213,7 @@ export function drawCumulativeLineChart(
   legend.append('text')
     .attr('x', 20)
     .attr('y', 12)
-    .text('USA')
+    .text('EEUU')
     .attr('fill', 'white')
     .attr('font-size', '14px');
 
@@ -322,7 +322,7 @@ export function drawCumulativeLineChart(
             `<div style="font-weight: 600; margin-bottom: 6px; font-size: 14px;">${d.year}</div>
              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
                <span style="width: 10px; height: 10px; background: #3b82f6; border-radius: 2px;"></span>
-               <span>USA: <strong>${d.USA}</strong></span>
+               <span>EEUU: <strong>${d.USA}</strong></span>
              </div>
              <div style="display: flex; align-items: center; gap: 8px;">
                <span style="width: 10px; height: 10px; background: #ef4444; border-radius: 2px;"></span>

@@ -244,7 +244,7 @@ export function drawFailureDensityChart(
     .attr('class', 'legend')
     .attr('transform', `translate(${innerWidth + 20}, 20)`);
 
-  // USA legend
+  // USA legend (displayed as EEUU)
   legend
     .append('rect')
     .attr('x', 0)
@@ -261,7 +261,7 @@ export function drawFailureDensityChart(
     .attr('y', 10)
     .attr('fill', '#fff')
     .attr('font-size', '14px')
-    .text('USA');
+    .text('EEUU');
 
   // USSR legend
   legend
@@ -370,7 +370,7 @@ export function drawFailureDensityChart(
           `<div style="font-weight: 600; margin-bottom: 6px; font-size: 14px;">${year}</div>
            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
              <span style="width: 10px; height: 10px; background: ${usaColor}; border-radius: 2px;"></span>
-             <span>USA: <strong>${yearData.usaFailures}</strong> ${yearData.usaFailures === 1 ? 'fallo' : 'fallos'}</span>
+             <span>EEUU: <strong>${yearData.usaFailures}</strong> ${yearData.usaFailures === 1 ? 'fallo' : 'fallos'}</span>
            </div>
            <div style="display: flex; align-items: center; gap: 8px;">
              <span style="width: 10px; height: 10px; background: ${ussrColor}; border-radius: 2px;"></span>

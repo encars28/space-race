@@ -143,10 +143,11 @@ export function drawAcumLaunchesBarChart(
     .attr('fill', 'transparent')
     .style('cursor', 'pointer')
     .on('mouseover', function (_, d) {
+      const label = d.country === 'USA' ? 'EEUU' : d.country;
       tooltip
         .style('opacity', '1')
         .html(`
-          <span style="color: ${colorScale(d.country)}">${d.country}</span><br/>
+          <span style="color: ${colorScale(d.country)}">${label}</span><br/>
           Total: ${d.total}<br/>
           Este año: ${d.new}
         `);
@@ -164,7 +165,7 @@ export function drawAcumLaunchesBarChart(
   g.append('g')
     .attr('class', 'x-axis')
     .attr('transform', `translate(0,${innerHeight})`)
-    .call(d3.axisBottom(xScale))
+    .call(d3.axisBottom(xScale).tickFormat((d: any) => (d === 'USA' ? 'EEUU' : String(d))))
     .selectAll('text')
     .attr('fill', '#fff')
     .attr('font-size', '18px')
@@ -192,14 +193,14 @@ export function drawAcumLaunchesBarChart(
     .attr('font-size', '16px')
     .text('Lanzamientos totales');
 
-  // Add crown on USA bar from 1969 onwards (Moon landing year)
+  // Add crown on EEUU bar from 1969 onwards (Moon landing year)
   if (currentData.year >= 1969) {
     const crownSize = 80;
     const usaBarX = xScale('USA') || 0;
     const usaBarY = yScale(currentData.USA);
     
     g.append('image')
-      .attr('class', 'usa-crown')
+      .attr('class', 'eeuu-crown')
       .attr('href', crownUrl)
       .attr('x', usaBarX + xScale.bandwidth() / 2 - crownSize / 2)
       .attr('y', usaBarY - crownSize + 15)
