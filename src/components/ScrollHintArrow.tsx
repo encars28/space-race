@@ -10,13 +10,12 @@ export default function ScrollHintArrow() {
       const windowHeight = window.innerHeight;
       const docHeight = document.documentElement.scrollHeight;
       
-      // Consider "at bottom" when within 100px of the bottom
       const atBottom = scrollTop + windowHeight >= docHeight - 100;
       setIsAtBottom(atBottom);
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check initial position
+    handleScroll();
     
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

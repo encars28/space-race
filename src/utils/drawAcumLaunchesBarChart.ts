@@ -98,16 +98,16 @@ export function drawAcumLaunchesBarChart(
     .attr('class', 'country-group')
     .attr('transform', d => `translate(${xScale(d.country) || 0}, 0)`);
 
-  // Draw Previous Total (Bottom part)
+  // Draw Previous Total
   groups.append('rect')
     .attr('class', 'bar-prev')
     .attr('y', d => yScale(d.prev))
     .attr('width', xScale.bandwidth())
     .attr('height', d => innerHeight - yScale(d.prev))
     .attr('fill', d => colorScale(d.country))
-    .style('opacity', 1); // Solid for history
+    .style('opacity', 0.8);
 
-  // Draw New Launches (Top part)
+  // Draw New Launches
   groups.append('path')
     .attr('class', 'bar-new')
     .attr('d', d => {
@@ -132,7 +132,7 @@ export function drawAcumLaunchesBarChart(
       `;
     })
     .attr('fill', d => alternateColorScale(d.country))
-    .style('opacity', 1); // Faded for new launches
+    .style('opacity', 1);
 
   // Add invisible rect for tooltip interaction covering the whole bar space
   groups.append('rect')
@@ -193,7 +193,7 @@ export function drawAcumLaunchesBarChart(
     .attr('font-size', '16px')
     .text('Lanzamientos totales');
 
-  // Add crown on EEUU bar from 1969 onwards (Moon landing year)
+  // Add crown on EEUU bar from 1969 onwards
   if (currentData.year >= 1969) {
     const crownSize = 80;
     const usaBarX = xScale('USA') || 0;

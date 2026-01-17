@@ -101,7 +101,7 @@ export function drawCumulativeLineChart(
   xAxisGroup.select('.domain').attr('stroke', '#ffffff');
   yAxisGroup.select('.domain').attr('stroke', '#ffffff');
 
-  // Add horizontal grid lines (dashed) matching Failure Density chart
+  // Add horizontal grid lines
   g.append('g')
     .attr('class', 'grid')
     .selectAll('line')
@@ -202,7 +202,7 @@ export function drawCumulativeLineChart(
   const legend = svg.append('g')
     .attr('transform', `translate(${width - margin.right - 50}, ${height - margin.bottom -195})`);
 
-  // USA (displayed as EEUU) Legend
+  // USA
   legend.append('rect')
     .attr('x', 0)
     .attr('y', 0)

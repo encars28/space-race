@@ -6,12 +6,8 @@ import { getEventsForYear } from '../utils/timelineData';
 import type { TimelineEvent } from '../utils/timelineData';
 import ScrollHintArrow from './ScrollHintArrow';
 import crownImg from '../assets/crown.png';
-// import rocketImg from '../assets/rocket.png';
 import './SpaceRaceChart.css';
 
-// Controls how much scrolling is needed to go through all years
-// Lower values = faster scrolling, higher values = slower scrolling
-// 1 = minimal scroll, 5 = moderate scroll, 10 = lots of scrolling
 const SCROLL_SPEED = 8;
 const VISIBLE_YEARS = 6;
 
@@ -65,7 +61,7 @@ export default function SpaceRaceChart({ missions, onScrollBack, onScrollNext }:
     setData(yearlyData);
   }, [missions]);
 
-  // Handle scroll for scrollytelling (reduced scroll distance)
+  // Handle scroll for scrollytelling 
   useEffect(() => {
     if (years.length === 0) return;
 
@@ -123,7 +119,7 @@ export default function SpaceRaceChart({ missions, onScrollBack, onScrollNext }:
     return () => window.removeEventListener('wheel', handleWheel);
   }, [onScrollBack, onScrollNext, currentYearIndex, years.length]);
 
-  // Draw the chart using external function
+  // Draw the chart
   useEffect(() => {
     if (!svgRef.current || data.length === 0) return;
 
@@ -142,13 +138,9 @@ export default function SpaceRaceChart({ missions, onScrollBack, onScrollNext }:
   }, [years, currentYearIndex]);
 
   if (data.length === 0) {
-    // return <div className="loading">Loading data...</div>;
     return <div></div>;
   }
-
-  // const currentData = data[currentYearIndex];
-
-  // Calculate visible years window (10 years centered on current)
+  // Calculate visible years window
   const halfWindow = Math.floor(VISIBLE_YEARS / 2);
   
   // Calculate start index, keeping current year as centered as possible
@@ -161,12 +153,10 @@ export default function SpaceRaceChart({ missions, onScrollBack, onScrollNext }:
     startIndex = Math.max(0, endIndex - VISIBLE_YEARS);
   }
   
-  // const visibleYears = years.slice(startIndex, endIndex);
   const visibleStartIndex = startIndex;
 
   return (
     <div className="space-race-container">
-      {/* Vertical timeline on the left */}
       <div className="timeline-container">
         <div className="timeline"
           style={{

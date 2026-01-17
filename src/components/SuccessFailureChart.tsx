@@ -82,7 +82,6 @@ export default function SuccessFailureChart({
   }, [missions]);
 
   if (missions.length === 0) {
-    // return <div className="loading">Loading data...</div>;
     return <div></div>;
   }
 
@@ -94,9 +93,6 @@ export default function SuccessFailureChart({
           <div className="sf-chart-subtitle">Cada punto es un 1%</div>
           <svg ref={svgRef}></svg>
         </div>
-        {/* <div className="scroll-hint-sf">
-          <span>↓ Scroll para continuar ↓</span>
-        </div> */}
       </div>
 
       {/* Small scroll spacer to enable scroll detection */}

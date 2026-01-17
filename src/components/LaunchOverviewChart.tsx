@@ -137,7 +137,6 @@ export default function LaunchOverviewChart({
     <div className="launch-overview-container">
       <div className="lo-chart-wrapper">
         <div className="lo-chart-content">
-          {/* <h2 className="lo-chart-title">Visión general de la Carrera Espacial</h2> */}
           <div className="lo-charts-row">
             <svg ref={pictogramRef}></svg>
             <svg ref={pieRef}></svg>

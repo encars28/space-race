@@ -244,7 +244,7 @@ export function drawFailureDensityChart(
     .attr('class', 'legend')
     .attr('transform', `translate(${innerWidth + 20}, 20)`);
 
-  // USA legend (displayed as EEUU)
+  // USA legend
   legend
     .append('rect')
     .attr('x', 0)

@@ -54,23 +54,19 @@ export function drawDotMatrixChart(
   // Colors
   const usaColor = '#3b82f6';
   const ussrColor = '#ef4444';
-  const failureColor = '#9ca3af'; // same gray as overview pie (gray-400)
+  const failureColor = '#9ca3af';
 
   // Dot settings
   const dotRadius = 8;
   const dotSpacing = 22;
 
-  // Calculate dots for each category (based on percentage)
   const usaDots = calculatePercentageDots(data.usaSuccess, data.usaFailure);
   const ussrDots = calculatePercentageDots(data.ussrSuccess, data.ussrFailure);
-
-  // Calculate grid dimensions
   const dotsPerRow = 10; // Fixed 10x10 grid for 100 dots
 
   // Center the grid within the chart width
   const gridWidth = dotsPerRow * dotSpacing;
   const gridOffsetX = (chartWidth - gridWidth) / 2;
-  // Vertical offset (px) to move the dot grid down and create more space below the title/percentage
   const gridOffsetY = 22;
 
   // Draw function for a grid of dots with animation
@@ -121,7 +117,7 @@ export function drawDotMatrixChart(
   // USA section
   const usaGroup = g.append('g').attr('class', 'usa-section');
 
-  // USA title (displayed as EEUU)
+  // USA title
   usaGroup
     .append('text')
     .attr('x', chartWidth / 2)
@@ -129,12 +125,11 @@ export function drawDotMatrixChart(
     .attr('text-anchor', 'middle')
     .attr('fill', "#fff")
     .attr('font-size', '22px')
-    // .attr('font-weight', 'bold')
     .text('EEUU');
 
   drawDotGrid(usaGroup, usaDots.successDots, usaDots.failureDots, usaColor, 0, 0);
 
-  // USA percentage (permanent, white) - placed below the country title
+  // USA percentage
   const usaSuccessRateText = (data.usaSuccess + data.usaFailure === 0)
     ? '0.0%'
     : (((data.usaSuccess / (data.usaSuccess + data.usaFailure)) * 100).toFixed(1) + '%');
@@ -163,12 +158,11 @@ export function drawDotMatrixChart(
     .attr('text-anchor', 'middle')
     .attr('fill', "#fff")
     .attr('font-size', '22px')
-    // .attr('font-weight', 'bold')
     .text('URSS');
 
   drawDotGrid(ussrGroup, ussrDots.successDots, ussrDots.failureDots, ussrColor, 0, 100);
 
-  // USSR percentage (permanent, white) - placed below the country title
+  // USSR percentage
   const ussrSuccessRateText = (data.ussrSuccess + data.ussrFailure === 0)
     ? '0.0%'
     : (((data.ussrSuccess / (data.ussrSuccess + data.ussrFailure)) * 100).toFixed(1) + '%');
@@ -200,8 +194,8 @@ export function drawDotMatrixChart(
     .attr('offset', '50%')
     .attr('stop-color', ussrColor);
 
-  // Legend at bottom (centered, tighter spacing)
-  const legendY = innerHeight - 10; // pull slightly closer to chart
+  // Legend at bottom
+  const legendY = innerHeight - 10;
   const legendG = g.append('g').attr('transform', `translate(${innerWidth / 2}, ${legendY})`);
 
   // Success group
