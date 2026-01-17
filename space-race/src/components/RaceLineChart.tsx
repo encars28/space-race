@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { drawCumulativeLineChart } from '../utils/drawCumulativeLineChart';
-import type { DataPoint } from '../utils/drawCumulativeLineChart';
+import { drawCumulativeLineChart } from '../utils/drawAcumLaunchesLineChart';
+import type { DataPoint } from '../utils/drawAcumLaunchesLineChart';
 import type { MissionData } from '../utils/drawDotMatrixChart';
-import './CumulativeLineChart.css';
+import './RaceLineChart.css';
 
 interface CumulativeLineChartProps {
   missions: MissionData[];

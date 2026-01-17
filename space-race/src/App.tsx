@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import * as d3 from 'd3'
 import SpaceRaceChart from './components/SpaceRaceChart'
-import CumulativeLineChart from './components/CumulativeLineChart'
+import CumulativeLineChart from './components/RaceLineChart'
 import SuccessFailureChart from './components/SuccessFailureChart'
 import FailureDensityChart from './components/FailureDensityChart'
 import LaunchOverviewChart from './components/LaunchOverviewChart'
