@@ -21,6 +21,7 @@ export default function SuccessFailureChart({
   const svgRef = useRef<SVGSVGElement>(null);
   const hasTransitionedRef = useRef(false);
   const scrollUpCountRef = useRef(0);
+  const hasDrawnRef = useRef(false);
 
   // Handle scroll down to go to next chart
   useEffect(() => {
@@ -62,10 +63,22 @@ export default function SuccessFailureChart({
 
   // Draw the chart
   useEffect(() => {
-    if (!svgRef.current || missions.length === 0) return;
+    const svg = svgRef.current;
+    if (!svg || missions.length === 0 || hasDrawnRef.current) return;
 
     const data = processSuccessFailureData(missions);
-    drawDotMatrixChart(svgRef.current, data);
+
+    // Small delay to ensure DOM is ready and React Strict Mode double-render is complete
+    const timeoutId = setTimeout(() => {
+      if (svgRef.current && !hasDrawnRef.current) {
+        hasDrawnRef.current = true;
+        drawDotMatrixChart(svgRef.current, data);
+      }
+    }, 50);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [missions]);
 
   if (missions.length === 0) {

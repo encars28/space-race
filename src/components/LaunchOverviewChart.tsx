@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import * as d3 from 'd3';
 import {
   drawTotalLaunches,
   drawPieChart,
@@ -10,6 +9,7 @@ import ScrollHintArrow from './ScrollHintArrow';
 import './LaunchOverviewChart.css';
 
 interface LaunchOverviewChartProps {
+  missions: MissionDataWithCountry[];
   onScrollNext: () => void;
   onScrollBack: () => void;
 }
@@ -24,6 +24,7 @@ interface TooltipData {
 }
 
 export default function LaunchOverviewChart({
+  missions,
   onScrollNext,
   onScrollBack,
 }: LaunchOverviewChartProps) {
@@ -37,22 +38,13 @@ export default function LaunchOverviewChart({
     typeof processLaunchOverviewData
   > | null>(null);
 
-  // Load data with country information
+  // Process data from props
   useEffect(() => {
-    d3.csv('/space_race_missions.csv').then((rawData) => {
-      const missions: MissionDataWithCountry[] = rawData
-        .map((d) => ({
-          Year: Math.floor(parseFloat(d.Year || '0')),
-          Superpower: d.Superpower as string,
-          Mission_Status: d.Mission_Status as string,
-          Country: d.Country as string,
-        }))
-        .filter((d) => !isNaN(d.Year) && d.Year >= 1957);
-
+    if (missions && missions.length > 0) {
       const processedData = processLaunchOverviewData(missions);
       setData(processedData);
-    });
-  }, []);
+    }
+  }, [missions]);
 
   // Animate the chart on mount
   useEffect(() => {

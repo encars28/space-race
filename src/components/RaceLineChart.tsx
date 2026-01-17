@@ -1,4 +1,5 @@
 import { useEffect, useRef, useMemo } from 'react';
+import * as d3 from 'd3';
 import { drawCumulativeLineChart } from '../utils/drawAcumLaunchesLineChart';
 import type { DataPoint } from '../utils/drawAcumLaunchesLineChart';
 import type { MissionData } from '../utils/drawDotMatrixChart';
@@ -16,6 +17,7 @@ export default function CumulativeLineChart({
   const svgRef = useRef<SVGSVGElement>(null);
   const hasTransitionedRef = useRef(false);
   const scrollUpCountRef = useRef(0);
+  const hasDrawnRef = useRef(false);
 
   // Process data
   const chartData = useMemo(() => {
@@ -44,8 +46,23 @@ export default function CumulativeLineChart({
 
   // Handle drawing
   useEffect(() => {
-    if (!svgRef.current || chartData.length === 0) return;
-    drawCumulativeLineChart(svgRef.current, chartData);
+    const svg = svgRef.current;
+    if (!svg || chartData.length === 0 || hasDrawnRef.current) return;
+
+    // Clean any existing tooltip before drawing
+    d3.select('body').selectAll('.fd-tooltip').remove();
+
+    // Small delay to ensure DOM is ready and React Strict Mode double-render is complete
+    const timeoutId = setTimeout(() => {
+      if (svgRef.current && !hasDrawnRef.current) {
+        hasDrawnRef.current = true;
+        drawCumulativeLineChart(svgRef.current, chartData);
+      }
+    }, 50);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [chartData]);
 
   // Handle scroll back

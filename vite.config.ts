@@ -6,6 +6,8 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  base: "/space-race",
+  assetsInclude: ['**/*.csv'],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

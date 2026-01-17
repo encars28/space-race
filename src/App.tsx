@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import * as d3 from 'd3'
+import data from "./data/space_race_missions.json";
 import SpaceRaceChart from './components/SpaceRaceChart'
 import CumulativeLineChart from './components/RaceLineChart'
 import SuccessFailureChart from './components/SuccessFailureChart'
@@ -17,23 +17,19 @@ function App() {
   const [phase, setPhase] = useState<Phase>('home')
   const [fadeOut, setFadeOut] = useState(false)
   const [missions, setMissions] = useState<MissionData[]>([])
-  const [isLoading, setIsLoading] = useState(true)
 
   // Load data once for all visualizations
   useEffect(() => {
-    d3.csv('/space_race_missions.csv').then((rawData) => {
-      const parsedMissions = rawData
-        .filter((d) => d.Superpower === 'USA' || d.Superpower === 'USSR')
-        .map((d) => ({
-          Year: Math.floor(parseFloat(d.Year || '0')),
-          Superpower: d.Superpower as string,
-          Mission_Status: d.Mission_Status as string,
-        }))
-        .filter((d) => !isNaN(d.Year) && d.Year >= 1957)
+    const parsedMissions = data
+      .map((d) => ({
+        Year: Math.floor(d.Year || 0) as number,
+        Superpower: d.Superpower as string,
+        Mission_Status: d.Mission_Status as string,
+        Country: d.Country as string,
+      }))
+      .filter((d) => !isNaN(d.Year) && d.Year >= 1957)
 
-      setMissions(parsedMissions)
-      setIsLoading(false)
-    })
+    setMissions(parsedMissions as MissionData[])
   }, [])
 
   const handleStart = () => {
@@ -117,15 +113,6 @@ function App() {
     }, 600)
   }
 
-  if (isLoading) {
-    return (
-      <div className="app">
-        <StarsBackground className="!fixed inset-0 -z-10 !h-screen !w-screen" />
-        <div className="loading-screen">Cargando datos...</div>
-      </div>
-    )
-  }
-
   return (
     <div className="app">
       <StarsBackground className="!fixed inset-0 -z-10 !h-screen !w-screen" />
@@ -139,6 +126,7 @@ function App() {
       {phase === 'launch-overview' && (
         <div className={`page-content ${fadeOut ? 'page-fade-out' : ''}`}>
           <LaunchOverviewChart 
+            missions={missions}
             onScrollNext={handleScrollToSuccessFailure}
             onScrollBack={handleBackToHome}
           />
