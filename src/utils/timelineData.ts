@@ -109,10 +109,10 @@ export const timelineData: YearEvents[] = [
     year: 1966,
     events: [
       {
-        title: 'Primer aterrizaje suave en la Luna (Luna 9)',
+        title: 'Primer soft landing en la Luna',
         country: 'URSS',
         date: 'febrero 1966',
-        description: 'La sonda soviética Luna 9 realiza el primer aterrizaje suave en la superficie lunar, enviando las primeras imágenes desde la Luna.',
+        description: 'La sonda soviética Luna 9 realiza el primer softlanding en la superficie lunar, enviando las primeras imágenes desde la Luna.',
       },
       {
         title: 'Primer acoplamiento de dos naves',
