@@ -13,7 +13,7 @@
 #show table.cell: set block(inset: 2pt)
 
 #set document(
-  title: [Sistemas conexionistas],
+  title: [Visualización de la carrera espacial],
   author: "María Encarnación Sánchez Sánchez",
   description: [\ Analítica visual \ Máster en Sistemas Inteligentes \ Curso 2025-2026],
 )
@@ -50,3 +50,4 @@
 
 #include "doc/1_inicial.typ"
 #include "doc/2_evolucion.typ"
+#include "doc/3_resultado.typ"
