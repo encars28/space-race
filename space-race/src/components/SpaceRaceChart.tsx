@@ -5,6 +5,8 @@ import type { MissionData } from '../utils/drawDotMatrixChart';
 import { getEventsForYear } from '../utils/timelineData';
 import type { TimelineEvent } from '../utils/timelineData';
 import ScrollHintArrow from './ScrollHintArrow';
+import crownImg from '../assets/crown.png';
+// import rocketImg from '../assets/rocket.png';
 import './SpaceRaceChart.css';
 
 // Controls how much scrolling is needed to go through all years
@@ -209,7 +211,7 @@ export default function SpaceRaceChart({ missions, onScrollBack, onScrollNext }:
               <div key={index} className={`event-card ${event.country === 'USA' ? 'event-usa' : event.country === 'URSS' ? 'event-ussr' : 'event-both'}`}>
                 {/* Crown for the Moon Landing event */}
                 {event.title === 'Aterrizaje en la Luna' && (
-                  <img src="/crown.png" alt="Crown" className="event-crown" />
+                  <img src={crownImg} alt="Crown" className="event-crown" />
                 )}
 
                 <div className="event-header">

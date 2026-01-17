@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useMemo } from 'react';
 import { drawCumulativeLineChart } from '../utils/drawAcumLaunchesLineChart';
 import type { DataPoint } from '../utils/drawAcumLaunchesLineChart';
 import type { MissionData } from '../utils/drawDotMatrixChart';

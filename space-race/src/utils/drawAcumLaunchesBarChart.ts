@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import crownUrl from '../assets/crown.png';
 
 export interface YearlyData {
   year: number;
@@ -136,9 +137,9 @@ export function drawAcumLaunchesBarChart(
   // Add invisible rect for tooltip interaction covering the whole bar space
   groups.append('rect')
     .attr('class', 'interaction-layer')
-    .attr('y', d => yScale(d.total)) // Top of the stack
+    .attr('y', 0)
     .attr('width', xScale.bandwidth())
-    .attr('height', d => innerHeight - yScale(d.total))
+    .attr('height', innerHeight)
     .attr('fill', 'transparent')
     .style('cursor', 'pointer')
     .on('mouseover', function (_, d) {
@@ -199,7 +200,7 @@ export function drawAcumLaunchesBarChart(
     
     g.append('image')
       .attr('class', 'usa-crown')
-      .attr('href', '/crown.png')
+      .attr('href', crownUrl)
       .attr('x', usaBarX + xScale.bandwidth() / 2 - crownSize / 2)
       .attr('y', usaBarY - crownSize + 15)
       .attr('width', crownSize)
