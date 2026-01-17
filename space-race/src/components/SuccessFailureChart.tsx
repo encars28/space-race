@@ -77,7 +77,8 @@ export default function SuccessFailureChart({
     <div className="success-failure-container">
       <div className="sf-chart-wrapper">
         <div className="sf-chart-content">
-          <h2 className="sf-chart-title">Número de lanzamientos fallidos y con éxito</h2>
+          <h2 className="sf-chart-title">Porcentaje de lanzamientos fallidos y con éxito</h2>
+          <div className="sf-chart-subtitle">Cada punto es un 1%</div>
           <svg ref={svgRef}></svg>
         </div>
         {/* <div className="scroll-hint-sf">

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { drawAcumLaunchesBarChart } from '../utils/drawAcumLaunchesBarChart';
 import type { YearlyData } from '../utils/drawAcumLaunchesBarChart';
 import type { MissionData } from '../utils/drawDotMatrixChart';
-import { getEventsForYear, getCountryFlag } from '../utils/timelineData';
+import { getEventsForYear } from '../utils/timelineData';
 import type { TimelineEvent } from '../utils/timelineData';
 import ScrollHintArrow from './ScrollHintArrow';
 import './SpaceRaceChart.css';

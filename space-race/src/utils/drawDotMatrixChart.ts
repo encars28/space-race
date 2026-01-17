@@ -13,11 +13,18 @@ export interface DotMatrixData {
   ussrFailure: number;
 }
 
-// Each dot represents this many launches
-const LAUNCHES_PER_DOT = 5;
+// Total dots per chart (representing 100%)
+const TOTAL_DOTS = 100;
 
-function calculateDots(count: number): number {
-  return Math.ceil(count / LAUNCHES_PER_DOT);
+function calculatePercentageDots(success: number, failure: number): { successDots: number, failureDots: number } {
+  const total = success + failure;
+  if (total === 0) return { successDots: 0, failureDots: 0 };
+  
+  const successRate = success / total;
+  const successDots = Math.round(successRate * TOTAL_DOTS);
+  const failureDots = TOTAL_DOTS - successDots;
+  
+  return { successDots, failureDots };
 }
 
 export function drawDotMatrixChart(
@@ -53,14 +60,16 @@ export function drawDotMatrixChart(
   const dotRadius = 8;
   const dotSpacing = 22;
 
-  // Calculate dots for each category
-  const usaSuccessDots = calculateDots(data.usaSuccess);
-  const usaFailureDots = calculateDots(data.usaFailure);
-  const ussrSuccessDots = calculateDots(data.ussrSuccess);
-  const ussrFailureDots = calculateDots(data.ussrFailure);
+  // Calculate dots for each category (based on percentage)
+  const usaDots = calculatePercentageDots(data.usaSuccess, data.usaFailure);
+  const ussrDots = calculatePercentageDots(data.ussrSuccess, data.ussrFailure);
 
   // Calculate grid dimensions
-  const dotsPerRow = Math.floor(chartWidth / dotSpacing);
+  const dotsPerRow = 10; // Fixed 10x10 grid for 100 dots
+
+  // Center the grid within the chart width
+  const gridWidth = dotsPerRow * dotSpacing;
+  const gridOffsetX = (chartWidth - gridWidth) / 2;
 
   // Draw function for a grid of dots with animation
   function drawDotGrid(
@@ -78,7 +87,7 @@ export function drawDotMatrixChart(
       const col = i % dotsPerRow;
       const row = Math.floor(i / dotsPerRow);
       dots.push({
-        x: offsetX + col * dotSpacing + dotRadius,
+        x: offsetX + gridOffsetX + col * dotSpacing + dotRadius,
         y: row * dotSpacing + dotRadius,
         isSuccess: i < successCount, // First dots are successes
         index: i,
@@ -121,7 +130,7 @@ export function drawDotMatrixChart(
     // .attr('font-weight', 'bold')
     .text('USA');
 
-  drawDotGrid(usaGroup, usaSuccessDots, usaFailureDots, usaColor, 0, 0);
+  drawDotGrid(usaGroup, usaDots.successDots, usaDots.failureDots, usaColor, 0, 0);
 
   // USSR section
   const ussrGroup = g
@@ -140,54 +149,63 @@ export function drawDotMatrixChart(
     // .attr('font-weight', 'bold')
     .text('URSS');
 
-  drawDotGrid(ussrGroup, ussrSuccessDots, ussrFailureDots, ussrColor, 0, 100);
+  drawDotGrid(ussrGroup, ussrDots.successDots, ussrDots.failureDots, ussrColor, 0, 100);
 
-  // Legend at bottom
-  const legendY = innerHeight + 30;
+  // Define gradient for success legend
+  const defs = svg.append('defs');
+  const gradient = defs.append('linearGradient')
+    .attr('id', 'success-gradient')
+    .attr('x1', '0%')
+    .attr('x2', '100%')
+    .attr('y1', '0%')
+    .attr('y2', '0%');
+  
+  gradient.append('stop')
+    .attr('offset', '50%')
+    .attr('stop-color', usaColor);
+  
+  gradient.append('stop')
+    .attr('offset', '50%')
+    .attr('stop-color', ussrColor);
+
+  // Legend at bottom (centered, tighter spacing)
+  const legendY = innerHeight - 10; // pull slightly closer to chart
   const legendG = g.append('g').attr('transform', `translate(${innerWidth / 2}, ${legendY})`);
 
-  // Success legend
-  legendG
+  // Success group
+  const successGroup = legendG.append('g').attr('class', 'legend-success').attr('transform', 'translate(-36, 0)');
+  successGroup
     .append('circle')
-    .attr('cx', -120)
+    .attr('cx', -40)
     .attr('cy', 0)
     .attr('r', 8)
-    .attr('fill', '#fff');
+    .attr('fill', 'url(#success-gradient)');
 
-  legendG
+  successGroup
     .append('text')
-    .attr('x', -105)
+    .attr('x', -20)
     .attr('y', 5)
     .attr('fill', '#fff')
     .attr('font-size', '14px')
     .text('Éxito');
 
-  // Failure legend
-  legendG
+  // Failure group
+  const failureGroup = legendG.append('g').attr('class', 'legend-failure').attr('transform', 'translate(36, 0)');
+  failureGroup
     .append('circle')
-    .attr('cx', 20)
+    .attr('cx', 0)
     .attr('cy', 0)
     .attr('r', 8)
     .attr('fill', failureColor)
     .attr('opacity', 0.7);
 
-  legendG
+  failureGroup
     .append('text')
-    .attr('x', 35)
+    .attr('x', 14)
     .attr('y', 5)
     .attr('fill', '#fff')
     .attr('font-size', '14px')
     .text('Fallo');
-
-  // Note about dots representing multiple launches
-  legendG
-    .append('text')
-    .attr('x', 0)
-    .attr('y', 30)
-    .attr('text-anchor', 'middle')
-    .attr('fill', '#888')
-    .attr('font-size', '12px')
-    .text(`Cada punto representa ${LAUNCHES_PER_DOT} lanzamientos`);
 
   // Create tooltip
   let tooltip = d3.select('body').select<HTMLDivElement>('.dot-matrix-tooltip');
@@ -223,10 +241,10 @@ export function drawDotMatrixChart(
       tooltip
         .style('opacity', '1')
         .html(`
-          <div style="text-align: center; margin-bottom: 6px;"><strong style="color: white">USA</strong></div>
-          <div>✓ Éxitos: <strong>${data.usaSuccess}</strong></div>
-          <div>✗ Fallos: <strong>${data.usaFailure}</strong></div>
-          <div style="margin-top: 6px; color: #10b981;">Tasa: ${successRate}%</div>
+          <div style="text-align: center; margin-bottom: 6px;"><strong style="color: ${usaColor}">USA</strong></div>
+          <div><strong>Éxitos:</strong> ${data.usaSuccess}</div>
+          <div><strong>Fallos:</strong> ${data.usaFailure}</div>
+          <div style="margin-top: 6px; color: #10b981;">Porcentaje de éxito: ${successRate}%</div>
         `);
     })
     .on('mousemove', function (event) {
@@ -251,10 +269,10 @@ export function drawDotMatrixChart(
       tooltip
         .style('opacity', '1')
         .html(`
-          <div style="text-align: center; margin-bottom: 6px;"><strong style="color: white">URSS</strong></div>
-          <div>✓ Éxitos: <strong>${data.ussrSuccess}</strong></div>
-          <div>✗ Fallos: <strong>${data.ussrFailure}</strong></div>
-          <div style="margin-top: 6px; color: #10b981;">Tasa: ${successRate}%</div>
+          <div style="text-align: center; margin-bottom: 6px;"><strong style="color: ${ussrColor}">URSS</strong></div>
+          <div><strong>Éxitos:</strong> ${data.ussrSuccess}</div>
+          <div><strong>Fallos:</strong> ${data.ussrFailure}</div>
+          <div style="margin-top: 6px; color: #10b981;">Porcentaje de éxito: ${successRate}%</div>
         `);
     })
     .on('mousemove', function (event) {
