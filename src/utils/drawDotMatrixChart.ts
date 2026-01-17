@@ -241,7 +241,7 @@ export function drawDotMatrixChart(
       tooltip
         .style('opacity', '1')
         .html(`
-          <div style="text-align: center; margin-bottom: 6px;"><strong style="color: ${usaColor}">EEUU</strong></div>
+          <div style="margin-bottom: 6px;"><strong style="color: ${usaColor}">EEUU</strong></div>
           <div><strong>Éxitos:</strong> ${data.usaSuccess}</div>
           <div><strong>Fallos:</strong> ${data.usaFailure}</div>
           <div style="margin-top: 6px; color: #10b981;">Porcentaje de éxito: ${successRate}%</div>
@@ -269,7 +269,7 @@ export function drawDotMatrixChart(
       tooltip
         .style('opacity', '1')
         .html(`
-          <div style="text-align: center; margin-bottom: 6px;"><strong style="color: ${ussrColor}">URSS</strong></div>
+          <div style="margin-bottom: 6px;"><strong style="color: ${ussrColor}">URSS</strong></div>
           <div><strong>Éxitos:</strong> ${data.ussrSuccess}</div>
           <div><strong>Fallos:</strong> ${data.ussrFailure}</div>
           <div style="margin-top: 6px; color: #10b981;">Porcentaje de éxito: ${successRate}%</div>
