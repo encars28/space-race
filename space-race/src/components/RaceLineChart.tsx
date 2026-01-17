@@ -70,27 +70,28 @@ export default function CumulativeLineChart({
 
   return (
     <div className="cumulative-chart-container">
+      <div className='cumulative-chart-content'>
       <div className="cumulative-chart-grid">
         <div className="cumulative-chart-viz">
            <svg ref={svgRef}></svg>
         </div>
-        
         <div className="cumulative-conclusions">
-          <h2>Conclusiones</h2>
+          <h2>¿Quién fue el ganador?</h2>
           <p>
-            <strong>¿Quién ganó la Carrera Espacial?</strong>
+            La carrera espacial no tuvo un ganador definitivo. Estados Unidos ganó la carrera lunar en 1969, lo que en su momento se vio por el público general como una victoria decisiva.
           </p>
           <p>
-            Aunque la <strong>URSS</strong> tomó la delantera inicial con el Sputnik y el primer humano en el espacio (Yuri Gagarin), <strong>EE. UU.</strong> logró el hito definitivo al llevar humanos a la Luna en 1969.
+            Sin embargo, la Unión Soviética logró varios hitos importantes sin los que este aterrizaje no habría sido posible.
           </p>
-          <p className="highlight">
-            Más allá de la política, esta competencia aceleró avances científicos que hoy damos por sentados, desde las telecomunicaciones hasta la observación terrestre.
+          <p>
+            Más allá de la política, muchas ramas del conocimiento se vieron reforzadas, por ejemplo, la medicina, computación y ciencia de materiales.
           </p>
           
           <div className='footer-buttons'>
             <button className="restart-button" onClick={onScrollBack}>
               Volver al inicio
             </button>
+          </div>
           </div>
         </div>
       </div>

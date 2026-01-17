@@ -101,6 +101,20 @@ export function drawCumulativeLineChart(
   xAxisGroup.select('.domain').attr('stroke', '#ffffff');
   yAxisGroup.select('.domain').attr('stroke', '#ffffff');
 
+  // Add horizontal grid lines (dashed) matching Failure Density chart
+  g.append('g')
+    .attr('class', 'grid')
+    .selectAll('line')
+    .data(yScale.ticks(6))
+    .enter()
+    .append('line')
+    .attr('x1', 0)
+    .attr('x2', innerWidth)
+    .attr('y1', (d) => yScale(d))
+    .attr('y2', (d) => yScale(d))
+    .attr('stroke', 'rgba(255, 255, 255, 0.23)')
+    .attr('stroke-dasharray', '3,3');
+
   // Line generators
   const lineGeneratorUSA = d3.line<DataPoint>()
     .x(d => xScale(d.year))
@@ -184,39 +198,39 @@ export function drawCumulativeLineChart(
     .attr('font-weight', 'bold')
     .text('Lanzamientos durante la carrera espacial');
 
-  // Legend
-  // const legend = svg.append('g')
-  //   .attr('transform', `translate(${width - margin.right - 50}, ${margin.top + 20})`);
+  //Legend
+  const legend = svg.append('g')
+    .attr('transform', `translate(${width - margin.right - 50}, ${height - margin.bottom -195})`);
 
-  // // USA Legend
-  // legend.append('rect')
-  //   .attr('x', 0)
-  //   .attr('y', 0)
-  //   .attr('width', 15)
-  //   .attr('height', 15)
-  //   .attr('fill', '#3b82f6');
+  // USA Legend
+  legend.append('rect')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', 15)
+    .attr('height', 15)
+    .attr('fill', '#3b82f6');
   
-  // legend.append('text')
-  //   .attr('x', 20)
-  //   .attr('y', 12)
-  //   .text('USA')
-  //   .attr('fill', 'white')
-  //   .attr('font-size', '14px');
+  legend.append('text')
+    .attr('x', 20)
+    .attr('y', 12)
+    .text('USA')
+    .attr('fill', 'white')
+    .attr('font-size', '14px');
 
-  // // USSR Legend
-  // legend.append('rect')
-  //   .attr('x', 0)
-  //   .attr('y', 25)
-  //   .attr('width', 15)
-  //   .attr('height', 15)
-  //   .attr('fill', '#ef4444');
+  // USSR Legend
+  legend.append('rect')
+    .attr('x', 0)
+    .attr('y', 25)
+    .attr('width', 15)
+    .attr('height', 15)
+    .attr('fill', '#ef4444');
   
-  // legend.append('text')
-  //   .attr('x', 20)
-  //   .attr('y', 37)
-  //   .text('URSS')
-  //   .attr('fill', 'white')
-  //   .attr('font-size', '14px');
+  legend.append('text')
+    .attr('x', 20)
+    .attr('y', 37)
+    .text('URSS')
+    .attr('fill', 'white')
+    .attr('font-size', '14px');
 
   function setupTooltip() {
     // Use a body-attached tooltip like the failure density chart for consistent appearance

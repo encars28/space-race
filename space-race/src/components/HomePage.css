@@ -51,6 +51,13 @@
   margin: 0;
 }
 
+.home-description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 800px;
+  margin: 0;
+}
+
 .start-button {
   margin-top: 2rem;
   padding: 1rem 3rem;
@@ -59,7 +66,7 @@
   text-transform: uppercase;
   letter-spacing: 0.2em;
   color: #fff;
-  background: linear-gradient(135deg, #3b82f6 0%, #ef4444 100%);
+  background: linear-gradient(180deg, #3b82f6 0%, #ef4444 100%);
   border: none;
   border-radius: 50px;
   cursor: pointer;
