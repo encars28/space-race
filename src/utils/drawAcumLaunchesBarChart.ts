@@ -49,7 +49,7 @@ export function drawAcumLaunchesBarChart(
   const alternateColorScale = d3
     .scaleOrdinal<string>()
     .domain(['USA', 'URSS'])
-    .range(['#9dc0fa', '#f87171']);
+    .range(['#9bc6ff', '#ffaca4']);
 
   // Calculate previous and new launches
   const currentIndex = allData.findIndex(d => d.year === currentData.year);
