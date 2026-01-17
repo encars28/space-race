@@ -70,6 +70,8 @@ export function drawDotMatrixChart(
   // Center the grid within the chart width
   const gridWidth = dotsPerRow * dotSpacing;
   const gridOffsetX = (chartWidth - gridWidth) / 2;
+  // Vertical offset (px) to move the dot grid down and create more space below the title/percentage
+  const gridOffsetY = 22;
 
   // Draw function for a grid of dots with animation
   function drawDotGrid(
@@ -88,7 +90,7 @@ export function drawDotMatrixChart(
       const row = Math.floor(i / dotsPerRow);
       dots.push({
         x: offsetX + gridOffsetX + col * dotSpacing + dotRadius,
-        y: row * dotSpacing + dotRadius,
+        y: row * dotSpacing + dotRadius + gridOffsetY,
         isSuccess: i < successCount, // First dots are successes
         index: i,
       });
@@ -113,7 +115,7 @@ export function drawDotMatrixChart(
       .delay((d) => animationDelay + d.index * 5) // Stagger each dot by 5ms
       .ease(d3.easeBackOut.overshoot(1.5))
       .attr('r', dotRadius)
-      .attr('opacity', (d) => (d.isSuccess ? 1 : 0.7));
+      .attr('opacity', (d) => (d.isSuccess ? 0.9 : 0.7));
   }
 
   // USA section
@@ -131,6 +133,21 @@ export function drawDotMatrixChart(
     .text('EEUU');
 
   drawDotGrid(usaGroup, usaDots.successDots, usaDots.failureDots, usaColor, 0, 0);
+
+  // USA percentage (permanent, white) - placed below the country title
+  const usaSuccessRateText = (data.usaSuccess + data.usaFailure === 0)
+    ? '0.0%'
+    : (((data.usaSuccess / (data.usaSuccess + data.usaFailure)) * 100).toFixed(1) + '%');
+
+  usaGroup
+    .append('text')
+    .attr('x', chartWidth / 2)
+    .attr('y', -5)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#fff')
+    .attr('font-size', '14pt')
+    .attr('font-weight', '400')
+    .text(usaSuccessRateText);
 
   // USSR section
   const ussrGroup = g
@@ -150,6 +167,21 @@ export function drawDotMatrixChart(
     .text('URSS');
 
   drawDotGrid(ussrGroup, ussrDots.successDots, ussrDots.failureDots, ussrColor, 0, 100);
+
+  // USSR percentage (permanent, white) - placed below the country title
+  const ussrSuccessRateText = (data.ussrSuccess + data.ussrFailure === 0)
+    ? '0.0%'
+    : (((data.ussrSuccess / (data.ussrSuccess + data.ussrFailure)) * 100).toFixed(1) + '%');
+
+  ussrGroup
+    .append('text')
+    .attr('x', chartWidth / 2)
+    .attr('y', -5)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#fff')
+    .attr('font-size', '14pt')
+    .attr('font-weight', '400')
+    .text(ussrSuccessRateText);
 
   // Define gradient for success legend
   const defs = svg.append('defs');
@@ -237,14 +269,12 @@ export function drawDotMatrixChart(
     .attr('fill', 'transparent')
     .style('cursor', 'pointer')
     .on('mouseover', function () {
-      const successRate = ((data.usaSuccess / (data.usaSuccess + data.usaFailure)) * 100).toFixed(1);
       tooltip
         .style('opacity', '1')
         .html(`
           <div style="margin-bottom: 6px;"><strong style="color: ${usaColor}">EEUU</strong></div>
           <div><strong>Éxitos:</strong> ${data.usaSuccess}</div>
           <div><strong>Fallos:</strong> ${data.usaFailure}</div>
-          <div style="margin-top: 6px; color: #10b981;">Porcentaje de éxito: ${successRate}%</div>
         `);
     })
     .on('mousemove', function (event) {
@@ -265,14 +295,12 @@ export function drawDotMatrixChart(
     .attr('fill', 'transparent')
     .style('cursor', 'pointer')
     .on('mouseover', function () {
-      const successRate = ((data.ussrSuccess / (data.ussrSuccess + data.ussrFailure)) * 100).toFixed(1);
       tooltip
         .style('opacity', '1')
         .html(`
           <div style="margin-bottom: 6px;"><strong style="color: ${ussrColor}">URSS</strong></div>
           <div><strong>Éxitos:</strong> ${data.ussrSuccess}</div>
           <div><strong>Fallos:</strong> ${data.ussrFailure}</div>
-          <div style="margin-top: 6px; color: #10b981;">Porcentaje de éxito: ${successRate}%</div>
         `);
     })
     .on('mousemove', function (event) {
