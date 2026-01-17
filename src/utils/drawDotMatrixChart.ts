@@ -54,7 +54,7 @@ export function drawDotMatrixChart(
   // Colors
   const usaColor = '#3b82f6';
   const ussrColor = '#ef4444';
-  const failureColor = '#6b7280'; // gray-500
+  const failureColor = '#9ca3af'; // same gray as overview pie (gray-400)
 
   // Dot settings
   const dotRadius = 8;
